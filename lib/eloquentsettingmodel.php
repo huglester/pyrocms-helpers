@@ -1,7 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once(SHARED_ADDONPATH.'libraries/connection.php');
-
 class EloquentSettingModel extends Illuminate\Database\Eloquent\Model {
 
 	public $timestamps = false;
