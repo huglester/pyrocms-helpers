@@ -18,7 +18,7 @@
                         "lib"
                 ],
                 "files": [
-                        "helpers/myhelper_helper.php",
+                        "helpers/myhelper_helper.php"
                 ]
         },
 
