@@ -76,7 +76,7 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		$primary_key = $obj->primaryKey;
 
 		try {
-			$exists = DB::table($table)
+			$exists = Capsule::table($table)
 				->select('*')
 				->where($field, $value)
 				->where('lang', strtolower($lang))
@@ -86,7 +86,7 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 			// we support `lang` field here. in case table does not have `lang` field
 			if (strpos($e->getMessage(), "Unknown column 'lang'") !== false)
 			{
-				$exists = DB::table($table)
+				$exists = Capsule::table($table)
 					->select('*')
 					->where($field, $value)
 					->where($primary_key, '!=', (int) $pk_id) // edit support
