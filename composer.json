@@ -13,10 +13,14 @@
                 "php": ">=5.3.3"
         },
 
-        "files": [
-                "helpers",
-                "lib",
-        ],
+        "autoload": {
+                "classmap": [
+                        "lib"
+                ],
+                "files": [
+                        "helpers/myhelper_helper.php",
+                ]
+        },
 
         "minimum-stability": "dev"
 }
