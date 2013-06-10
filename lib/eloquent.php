@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+// how to replace this with more elegant solution?
+require_once('connection.php');
+
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 class Eloquent extends Illuminate\Database\Eloquent\Model {
@@ -97,14 +100,6 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 
 		return $exists;
 	}
-
-	// public static function image_delete($id)
-	// {
-	// 	$obj = new static;
-	// 	$table = $obj->getTable();
-
-	// 	dd($table);
-	// }
 
 	public static function create(array $attributes)
 	{
@@ -219,6 +214,5 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		
 		return $value;
 	}
-
 
 }
