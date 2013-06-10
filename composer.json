@@ -1,0 +1,22 @@
+{
+        "name": "huglester/pyrocms-helpers",
+        "type": "library",
+        "description": "PyroCMS helpers to work with Eloquent and others.",
+        "license": "MIT",
+        "authors": [
+                {
+                        "name": "huglester",
+                        "email": "huglester@gmail.com"
+                }
+        ],
+        "require": {
+                "php": ">=5.3.3"
+        },
+
+        "files": [
+                "helpers",
+                "lib",
+        ],
+
+        "minimum-stability": "dev"
+}
