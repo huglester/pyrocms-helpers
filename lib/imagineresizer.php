@@ -34,11 +34,17 @@ class ImagineResizer
 	public function __construct($full_path)
 	{
 		$this->file = new File($full_path);
-		$this->full_path = $full_path;
+
+		$this->validateImage(); // validating an image
+
+		$this->full_path = $this->file->getRealPath();
 	}
 
-	public function cropResize($destination, $source_width, $source_height, $quality = 90)
+	public function cropResize($destination, $source_width = null, $source_height = null, $quality = 90)
 	{
+		( ! $source_width and $source_height) and $source_width = $this->autoWidth($source_height);
+		( ! $source_height and $source_width) and $source_height = $this->autoHeight($source_width);
+
 		$imagine = new Imagine\Gd\Imagine();
 		$box = new Box($source_width, $source_height);
 		$destination = rtrim($destination, '/').'/';
@@ -90,6 +96,35 @@ class ImagineResizer
 		@chmod($destination.$filename, 0666);
 
 		return $this->file->getFileName();
+	}
+
+	protected function validateImage()
+	{
+		$mime = $this->file->getMimeType();
+		if (strpos($mime, 'image/') !== 0)
+		{
+			throw new Exception("Not an image: {$mime}...\n");
+		}
+
+		return true;
+	}
+
+	protected function autoWidth($height)
+	{
+		list ($originalHeight, $originalWidth) = getimagesize($this->full_path);
+
+		$ratio = bcdiv($originalHeight, $height, 3);
+
+		return bcdiv($originalWidth, $ratio, 0);
+	}
+
+	protected function autoHeight($width)
+	{
+		list ($originalWidth, $originalHeight) = getimagesize($this->full_path);
+
+		$ratio = bcdiv($originalWidth, $width, 3);
+
+		return bcdiv($originalHeight, $ratio, 0);
 	}
 
 }
