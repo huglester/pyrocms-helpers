@@ -7,15 +7,27 @@ $config = $CI->db; // Get the DB object
 
 $capsule = new Capsule;
 
+// somehow hostname returns a hostname with a port (localhost:3306), while PDO does not accept it
+if (strpos($config->hostname, ':'))
+{
+	list($hostname, $port) = explode(':', $config->hostname);
+}
+else
+{
+	$hostname = $config->hostname;
+	$port = $config->port;
+}
+
 $capsule->addConnection(array(
-    'driver' => $config->dbdriver,
-    'host' => $config->hostname,
-    'database' => $config->database,
-    'username' => $config->username,
-    'prefix' => $config->dbprefix,
-    'password' => $config->password,
-    'charset' => $config->char_set,
-    'collation' => $config->dbcollat,
+	'driver' => $config->dbdriver,
+	'host' => $hostname,
+	'port' => $port,
+	'database' => $config->database,
+	'username' => $config->username,
+	'prefix' => $config->dbprefix,
+	'password' => $config->password,
+	'charset' => $config->char_set,
+	'collation' => $config->dbcollat,
 ));
 
 // Setup the Eloquent ORM
@@ -37,9 +49,9 @@ $capsule->connection()->table('users')->where('id', 1)->first();
 // Making A Schema Builder Call...
 $capsule->connection()->schema()->create('users', function($t)
 {
-    $t->increments('id');
-    $t->string('email');
-    $t->timestamps();
+	$t->increments('id');
+	$t->string('email');
+	$t->timestamps();
 });*/
 
 // Usage example:
@@ -50,10 +62,10 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 #1 
 Capsule::schema()->create('naujienos', function($table)
 {
-    $table->increments('id');
-    
-    $table->string('title', 255)->default();
-    $table->string('slug', 255)->default();
+	$table->increments('id');
+	
+	$table->string('title', 255)->default();
+	$table->string('slug', 255)->default();
 });
 
 #2
