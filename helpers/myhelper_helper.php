@@ -502,6 +502,17 @@ function days_old_diff($startTimestamp, $endTimestamp = null, $mode = null)
 	return $prefix.$time;
 }
 
+function obj_get($obj, $key, $default = null)
+{
+	if (is_object($obj) and isset($obj->$key))
+	{
+		return $obj->$key;
+	}
+
+	return $default;
+}
+
+
 // function array_get($array, $key, $default = null)
 // {
 // 	if (is_array($array))
