@@ -111,7 +111,7 @@ class ImagineResizer
 
 	protected function autoWidth($height)
 	{
-		list ($originalHeight, $originalWidth) = getimagesize($this->full_path);
+		list ($originalWidth, $originalHeight) = getimagesize($this->full_path);
 
 		$ratio = bcdiv($originalHeight, $height, 3);
 
