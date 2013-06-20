@@ -9,18 +9,9 @@ use Imagine\Image\Point;
 use Imagine\Image\Box;
 
 /*
-Example usage:
-$imagine = new ImagineResizer($full_path);
-
-if ($image['image_width'] > $settings['width'] or $image['image_height'] > $settings['height'])
-{
-	$imagine->cropResize($settings['upload_path'], $settings['width'], $settings['height']);
-}
-
-if ($settings['thumb'])
-{
-	$imagine->cropResize($settings['thumb_upload_path'], $settings['thumb_width'], $settings['thumb_height']);
-}
+	Example usage:
+	$imagine = new ImagineResizer($full_path);
+	$imagine->cropResize($destination_dir, $width, $height);
 */
 
 class ImagineResizer
