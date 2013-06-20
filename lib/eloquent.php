@@ -11,7 +11,6 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 
 	protected static $order = null;
 	protected static $lang = null;
-	protected static $image_fields = array();
 
 	public function scopeActive($query)
 	{
@@ -117,12 +116,16 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		}
 
 		// fallback to default language
-		if (
-			(static::$lang and ! isset($attributes['lang'])) or 
-			(isset($fillable) and in_array('lang', $fillable) and ! isset($attributes['lang']))
-			)
+		if ( ! isset($attributes['lang']) or ! $attributes['lang'])
 		{
-			$attributes['lang'] = ci()->translate->default_language();
+			if
+			(
+				((isset(static::$lang) and static::$lang)) or 
+				(isset($fillable) and in_array('lang', $fillable))
+			)
+			{
+				$attributes['lang'] = ci()->translate->default_language();
+			}
 		}
 
 		foreach ($attributes as $key => $value)
@@ -162,9 +165,16 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		$fillable = isset($instance->fillable) ? $instance->fillable : array();
 
 		// fallback to default language
-		if ((static::$lang or in_array('order', $fillable)) and ! isset($attributes['lang']) and ! $this->lang)
+		if ( ! isset($attributes['lang']) or ! $attributes['lang'])
 		{
-			$attributes['lang'] = ci()->translate->default_language();
+			if
+			(
+				((isset(static::$lang) and static::$lang)) or 
+				(isset($fillable) and in_array('lang', $fillable))
+			)
+			{
+				$attributes['lang'] = ci()->translate->default_language();
+			}
 		}
 
 		foreach ($attributes as $key => $value)
