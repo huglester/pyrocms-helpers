@@ -19,6 +19,7 @@
                         "lib"
                 ],
                 "files": [
+                        "helpers/connection.php",
                         "helpers/myhelper_helper.php"
                 ]
         },
