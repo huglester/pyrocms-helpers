@@ -48,7 +48,7 @@ class ImagineResizer
 
 		if ($srcBox->getWidth() < $source_width and $srcBox->getHeight() < $source_height)
 		{
-			$dest = $destination.$this->file->getFileName();
+			$dest = FCPATH.$destination.$this->file->getFileName();
 
 			// only if paths are different
 			if ($dest != $this->full_path)
