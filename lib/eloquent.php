@@ -32,7 +32,10 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 
 	public function scopeLang($query)
 	{
-		if (static::$lang)
+		$instance = new static;
+		$fillable = isset($instance->fillable) ? $instance->fillable : array();
+
+		if (static::$lang or in_array('lang', $fillable))
 		{
 			return $query->where('lang', CURRENT_LANGUAGE);
 		}
