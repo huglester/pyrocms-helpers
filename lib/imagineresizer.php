@@ -31,13 +31,13 @@ class ImagineResizer
 		$this->full_path = $this->file->getRealPath();
 	}
 
-	public function cropResize($destination, $source_width = null, $source_height = null, $quality = 90)
+	public function cropResize($destination, $dest_width = null, $dest_height = null, $quality = 90)
 	{
-		( ! $source_width and $source_height) and $source_width = $this->autoWidth($source_height);
-		( ! $source_height and $source_width) and $source_height = $this->autoHeight($source_width);
+		( ! $dest_width and $dest_height) and $dest_width = $this->autoWidth($dest_height);
+		( ! $dest_height and $dest_width) and $dest_height = $this->autoHeight($dest_width);
 
 		$imagine = new Imagine\Gd\Imagine();
-		$box = new Box($source_width, $source_height);
+		$box = new Box($dest_width, $dest_height);
 		$destination = rtrim($destination, '/').'/';
 
 		$filename = $this->file->getFileName();
@@ -46,7 +46,7 @@ class ImagineResizer
 		//original size
 		$srcBox = $image->getSize();
 
-		if ($srcBox->getWidth() < $source_width and $srcBox->getHeight() < $source_height)
+		if ($srcBox->getWidth() < $dest_width and $srcBox->getHeight() < $dest_height)
 		{
 			$dest = FCPATH.$destination.$this->file->getFileName();
 
