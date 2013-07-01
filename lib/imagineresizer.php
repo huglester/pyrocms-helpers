@@ -55,7 +55,6 @@ class ImagineResizer
 			{
 				if ( ! copy($this->file, $dest))
 				{
-
 					throw new Exception("failed to copy from $this->file to {$dest}...\n");
 				}
 
