@@ -512,6 +512,40 @@ function obj_get($obj, $key, $default = null)
 	return $default;
 }
 
+function is_valid_email($email)
+{
+	//return eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $email);
+
+	return filter_var($email, FILTER_VALIDATE_EMAIL);
+}
+
+function recursive_copy($src, $dst)
+{ 
+	$dir = opendir($src);
+	
+	if ( ! is_dir($dst))
+	{
+		mkdir($dst);
+		chmod($dst, 0777);
+	}
+
+	while (false !== ( $file = readdir($dir)))
+	{
+		if (( $file != '.' ) && ( $file != '..' ))
+		{
+			if ( is_dir($src . '/' . $file) )
+			{
+				recurse_copy($src . '/' . $file,$dst . '/' . $file);
+			}
+			else
+			{
+				copy($src . '/' . $file,$dst . '/' . $file); 
+			}
+		}
+	}
+
+	closedir($dir);
+}
 
 // function array_get($array, $key, $default = null)
 // {
