@@ -78,7 +78,7 @@ class TinySwift
 			$transport = Swift_SmtpTransport::newInstance('localhost');
 		}
 
-		( ! isset($reply_to)) and $reply_to = $from;
+		( ! isset($reply_to) or ! $reply_to) and $reply_to = $from;
 
 		$mailer = Swift_Mailer::newInstance($transport);
 
