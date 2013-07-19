@@ -11,7 +11,8 @@
         ],
         "require": {
                 "php": ">=5.3.3",
-                "imagine/imagine": "dev-develop"
+                "imagine/imagine": "dev-develop",
+                "symfony/http-foundation": "2.3.x@stable"
         },
 
         "autoload": {

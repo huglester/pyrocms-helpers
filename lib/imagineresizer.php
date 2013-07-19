@@ -38,12 +38,25 @@ class ImagineResizer
 
 		$imagine = new Imagine\Gd\Imagine();
 		$box = new Box($dest_width, $dest_height);
-		$destination = rtrim($destination, '/').'/';
+
+		$new_filename = pathinfo($destination, PATHINFO_FILENAME);
+		$new_extention = pathinfo($destination, PATHINFO_EXTENSION);
 
 		$filename = $this->file->getFileName();
+
+		// extension exists - change destination filename
+		if ($new_extention and $new_filename)
+		{
+			$filename = $new_filename.'.'.$new_extention;
+
+			// remove filename from destination
+			$destination = substr($destination, 0, -strlen($filename));
+		}
+
+		$destination = rtrim($destination, '/').'/';
 		$image = $imagine->open($this->file);
 
-		//original size
+		// original size
 		$srcBox = $image->getSize();
 
 		if ($srcBox->getWidth() < $dest_width and $srcBox->getHeight() < $dest_height)

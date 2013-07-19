@@ -1,4 +1,4 @@
-<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 
 if ( ! function_exists('my_send_email') )
 {
@@ -48,6 +48,42 @@ function month_array($lang = 'en')
 	);
 
 	return (isset($array[$lang])) ? $array[$lang] : $array['lt'];
+}
+
+/*
+Array
+(
+    [2013] => 2013
+    [2012] => 2012
+    [2011] => 2011
+    [2010] => 2010
+    [2009] => 2009
+    [2008] => 2008
+    [2007] => 2007
+    [2006] => 2006
+    [2005] => 2005
+    [2004] => 2004
+    [2003] => 2003
+)
+
+*/
+function years_array($end = null, $reverse = false)
+{
+	( ! $end) and $end = date('Y') - 20;
+
+	$years = array_combine(range(date("Y"), $end), range(date("Y"), $end));
+
+	return ($reverse) ? array_reverse($years) : $years;
+}
+
+function months_array()
+{
+	return array_combine(range(1, 12), range(1, 12));
+}
+
+function days_array()
+{
+	return array_combine(range(1, 31), range(1, 31));
 }
 
 function age($p_strDate)
