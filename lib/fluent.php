@@ -5,7 +5,7 @@ require_once('connection.php');
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
-class Fluent extends Illuminate\Database\Query\Builder {
+class Fluent {
 
 
 }
