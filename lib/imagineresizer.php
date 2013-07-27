@@ -138,19 +138,15 @@ class ImagineResizer
 		$source_width = $srcBox->getWidth();
 		$source_height = $srcBox->getHeight();
 
-		$valid_width = $dest_width;
-		$valid_height = $dest_height;
+		// calculate divider
+		$divider_x = bcdiv($source_width, $dest_width, 3);
+		$divider_y = bcdiv($source_height, $dest_height, 3);
+		
+		$divider = ($divider_x >= $divider_y) ? $divider_x : $divider_y;
+		// calculate divider END
 
-		if ($dest_width or $dest_height)
-		{
-			$divider_x = bcdiv($source_width, $dest_width, 3);
-			$divider_y = bcdiv($source_height, $dest_height, 3);
-			
-			$divider = ($divider_x >= $divider_y) ? $divider_x : $divider_y;
-			
-			$valid_width = floor(bcdiv($source_width, $divider, 3));
-			$valid_height = floor(bcdiv($source_height, $divider, 3));
-		}
+		$valid_width = floor(bcdiv($source_width, $divider, 3));
+		$valid_height = floor(bcdiv($source_height, $divider, 3));
 
 		$offset_x = 0;
 		$offset_y = 0;
