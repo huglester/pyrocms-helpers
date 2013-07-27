@@ -33,6 +33,11 @@ class ImagineResizer
 
 	public function cropResize($destination, $dest_width = null, $dest_height = null, $quality = 90)
 	{
+		if ( ! $dest_width and ! $dest_height)
+		{
+			throw new Exception("\$dest_width or \$dest_height is required.\n");
+		}
+
 		( ! $dest_width and $dest_height) and $dest_width = $this->autoWidth($dest_height);
 		( ! $dest_height and $dest_width) and $dest_height = $this->autoHeight($dest_width);
 
@@ -95,6 +100,79 @@ class ImagineResizer
 		$image
 			//->crop($cropPoint, new Box($width, $height))
 			->save($destination.$filename, array('quality' => $quality));
+
+		@chmod($destination.$filename, 0666);
+
+		return $this->file->getFileName();
+	}
+
+	public function resizeBg($destination, $dest_width = null, $dest_height = null, $quality = 90, $bgcolor = '#fff')
+	{
+		if ( ! $dest_width and ! $dest_height)
+		{
+			throw new Exception("\$dest_width or \$dest_height is required.\n");
+		}
+
+		$imagine = new Imagine\Gd\Imagine();
+		$box = new Box($dest_width, $dest_height);
+
+		$new_filename = pathinfo($destination, PATHINFO_FILENAME);
+		$new_extention = pathinfo($destination, PATHINFO_EXTENSION);
+
+		$filename = $this->file->getFileName();
+
+		// extension exists - change destination filename
+		if ($new_extention and $new_filename)
+		{
+			$filename = $new_filename.'.'.$new_extention;
+
+			// remove filename from destination
+			$destination = substr($destination, 0, -strlen($filename));
+		}
+
+		$destination = rtrim($destination, '/').'/';
+		$image = $imagine->open($this->file);
+
+		$srcBox = $image->getSize();
+
+		$source_width = $srcBox->getWidth();
+		$source_height = $srcBox->getHeight();
+
+		$valid_width = $dest_width;
+		$valid_height = $dest_height;
+
+		if ($dest_width or $dest_height)
+		{
+			$divider_x = bcdiv($source_width, $dest_width, 3);
+			$divider_y = bcdiv($source_height, $dest_height, 3);
+			
+			$divider = ($divider_x >= $divider_y) ? $divider_x : $divider_y;
+			
+			$valid_width = floor(bcdiv($source_width, $divider, 3));
+			$valid_height = floor(bcdiv($source_height, $divider, 3));
+		}
+
+		$offset_x = 0;
+		$offset_y = 0;
+
+		if ($dest_width > $valid_width)
+		{
+			$sub = bcsub($dest_width, $valid_width);
+			$offset_x = floor(bcdiv($sub, 2, 3));
+		}
+
+		if ($dest_height > $valid_height)
+		{
+			$sub = bcsub($dest_height, $valid_height);
+			$offset_y = floor(bcdiv($sub, 2, 3));
+		}
+
+		$image->resize(new Box($valid_width, $valid_height));
+
+		$container = $imagine->create(new Box($dest_width, $dest_height));
+
+		$container->paste($image, new Point($offset_x, $offset_y));
+		$container->save($destination.$filename, array('quality' => $quality));
 
 		@chmod($destination.$filename, 0666);
 
