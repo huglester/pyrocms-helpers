@@ -135,7 +135,7 @@ class ImagineResizer
 			}
 		}
 
-		return new Imagine\Image\Point($position_final_x, $position_final_y);
+		return new Point($position_final_x, $position_final_y);
 	}
 
 	public function cropResize($destination, $dest_width = null, $dest_height = null, $quality = 90)
