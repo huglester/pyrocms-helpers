@@ -12,6 +12,11 @@ use Imagine\Image\Box;
 	Example usage:
 	$imagine = new ImagineResizer($full_path);
 	$imagine->cropResize($destination_dir, $width, $height);
+
+	$imagine = new ImagineResizer($full_path);
+	$imagine->setWatermark(FCPATH.'userdata/watermark.png');
+	$imagine->setWatermarkPos('top 20', 'right 20');
+	$imagine->cropResize($destination_dir, $width, $height, $quality);
 */
 
 class ImagineResizer
@@ -21,6 +26,9 @@ class ImagineResizer
 	protected $box;
 	protected $file;
 	protected $full_path;
+	protected $watermark;
+	protected $watermark_pos_x;
+	protected $watermark_pos_y;
 
 	public function __construct($full_path)
 	{
@@ -31,6 +39,105 @@ class ImagineResizer
 		$this->full_path = $this->file->getRealPath();
 	}
 
+	public function setWatermark($full_path)
+	{
+		$file = new File($full_path);
+
+		$imagine = new Imagine\Gd\Imagine();
+		$watermark = $imagine->open($file->getRealPath());
+		
+		$this->watermark = $watermark;
+	}
+
+	public function setWatermarkPos($pos_y, $pos_x)
+	{
+		$count = count(func_get_args());
+
+		if ($count != 2)
+		{
+			throw new Exception("setWatermarkPos only accepts 2 args. $count given.\n");
+		}
+
+		$this->watermark_pos_y = $pos_y;
+		$this->watermark_pos_x = $pos_x;
+
+		return $this;
+	}
+
+	protected function getWatermarkPos(Box $image, Box $srcImage)
+	{
+		$height = $image->getHeight();
+		$width = $image->getWidth();
+
+		// if we have destination image is bigger than source,
+		// we need to fix positioning relative to source
+		if ($height > $srcImage->getHeight())
+		{
+			$height = $srcImage->getHeight();
+		}
+		if ($width > $srcImage->getWidth())
+		{
+			$width = $srcImage->getWidth();
+		}
+		// END
+
+		$watermark_pos_x = $this->watermark_pos_x;
+		$watermark_pos_y = $this->watermark_pos_y;
+
+		$position_final_x = 0;
+		$position_final_y = 0;
+
+		$watermark = $this->watermark->getSize();
+
+		if (strpos($watermark_pos_y, 'top') !== false)
+		{
+			// nothing needs to be done here
+			$watermark_pos_y = trim(str_replace('top', '', $watermark_pos_y));
+
+			if ($watermark_pos_y = (int) $watermark_pos_y)
+			{
+				$position_final_y += $watermark_pos_y;
+			}
+		}
+
+		if (strpos($watermark_pos_y, 'bottom') !== false)
+		{
+			$position_final_y = $height - $watermark->getHeight();
+
+			$watermark_pos_y = trim(str_replace('bottom', '', $watermark_pos_y));
+
+			if ($watermark_pos_y = (int) $watermark_pos_y)
+			{
+				$position_final_y -= $watermark_pos_y;
+			}
+		}
+
+		if (strpos($watermark_pos_x, 'left') !== false)
+		{
+			// nothing needs to be done here
+			$watermark_pos_x = trim(str_replace('left', '', $watermark_pos_x));
+
+			if ($watermark_pos_x = (int) $watermark_pos_x)
+			{
+				$position_final_x += $watermark_pos_x;
+			}
+		}
+
+		if (strpos($watermark_pos_x, 'right') !== false)
+		{
+			$position_final_x = $width - $watermark->getWidth();
+
+			$watermark_pos_x = trim(str_replace('right', '', $watermark_pos_x));
+
+			if ($watermark_pos_x = (int) $watermark_pos_x)
+			{
+				$position_final_x -= $watermark_pos_x;
+			}
+		}
+
+		return new Imagine\Image\Point($position_final_x, $position_final_y);
+	}
+
 	public function cropResize($destination, $dest_width = null, $dest_height = null, $quality = 90)
 	{
 		if ( ! $dest_width and ! $dest_height)
@@ -38,10 +145,16 @@ class ImagineResizer
 			throw new Exception("\$dest_width or \$dest_height is required.\n");
 		}
 
+		$imagine = new Imagine\Gd\Imagine();
+		$image = $imagine->open($this->file);
+
+		// original size
+		$srcBox = $image->getSize();
+
 		( ! $dest_width and $dest_height) and $dest_width = $this->autoWidth($dest_height);
 		( ! $dest_height and $dest_width) and $dest_height = $this->autoHeight($dest_width);
 
-		$imagine = new Imagine\Gd\Imagine();
+		
 		$box = new Box($dest_width, $dest_height);
 
 		$new_filename = pathinfo($destination, PATHINFO_FILENAME);
@@ -59,22 +172,26 @@ class ImagineResizer
 		}
 
 		$destination = rtrim($destination, '/').'/';
-		$image = $imagine->open($this->file);
-
-		// original size
-		$srcBox = $image->getSize();
 
 		if ($srcBox->getWidth() < $dest_width and $srcBox->getHeight() < $dest_height)
 		{
 			$dest = FCPATH.$destination.$this->file->getFileName();
 
 			// only if paths are different
-			if ($dest != $this->full_path)
+			// or if we have a watermark, and want to overwrite original photo...
+			if ($dest != $this->full_path or $this->watermark)
 			{
-				if ( ! copy($this->file, $dest))
+				// do we need to apply a watermark?
+				if ($this->watermark)
 				{
-					throw new Exception("failed to copy from $this->file to {$dest}...\n");
+					// we get position for our watermark
+					$watermark_point = $this->getWatermarkPos($box, $srcBox);
+					$image->paste($this->watermark, $watermark_point);
 				}
+
+				// we use this, since we want to preserve watermark, quality. Can't simply copy()
+				$image
+					->save($destination.$filename, array('quality' => $quality));
 
 				@chmod($dest, 0666);
 			}
@@ -96,6 +213,14 @@ class ImagineResizer
 		}
 
 		$image = $image->thumbnail($box, \Imagine\Image\ImageInterface::THUMBNAIL_OUTBOUND);
+
+		// do we need to apply a watermark?
+		if ($this->watermark)
+		{
+			// we get position for our watermark
+			$watermark_point = $this->getWatermarkPos($box, $srcBox);
+			$image->paste($this->watermark, $watermark_point);
+		}
 
 		$image
 			//->crop($cropPoint, new Box($width, $height))
