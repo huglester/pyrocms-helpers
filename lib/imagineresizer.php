@@ -305,7 +305,7 @@ class ImagineResizer
 		$mime = $this->file->getMimeType();
 		if (strpos($mime, 'image/') !== 0)
 		{
-			throw new Exception("Not an image: {$mime}...\n");
+			throw new Exception("Not an image. Mime type: {$mime}...\n");
 		}
 
 		return true;
