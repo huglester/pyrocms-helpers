@@ -8,9 +8,14 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 class Eloquent extends Illuminate\Database\Eloquent\Model {
 
 	// protected static $_instances = array();
-
 	protected static $order = null;
 	protected static $lang = null;
+
+	protected $validateVars = array(); // items to validate
+	protected $messages;
+	protected $validatedFields; // array ('comment');
+	protected $errorFields; // array ('title');
+	protected $allFields; // used for jquery each... array ('title' => false, 'comment' => true)
 
 	public function scopeActive($query)
 	{
@@ -226,6 +231,102 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		}
 		
 		return $value;
+	}
+
+	public function fill(array $attributes)
+	{
+		// if ((empty($fillable) or count($fillable) === 0) and (empty(static::$rules) or count(static::$rules) === 0))
+		if ( ! isset(static::$rules))
+		{
+			return parent::fill($attributes);
+		}
+
+		// we have rules, proceed
+		$this->validateVars = array();
+
+		foreach ($attributes as $key => $value)
+		{
+			// $key = $this->removeTableFromKey($key);
+
+			if ($this->isFillable($key))
+			{
+				$this->validateVars[$key] = $attributes[$key];
+			}
+		}
+
+		return parent::fill($this->getValidateVars());
+	}
+
+	public function validate($input = null)
+	{
+		// no rules applied
+		if ( ! isset(static::$rules) or count(static::$rules) === 0)
+		{
+			return true;
+		}
+
+		// $input = array_merge($this->attributes, $this->getValidateVars());
+		$input = $this->getValidateVars();
+
+		// handle both $_POST and custom arrays
+		ci()->form_validation->set_data($input);
+
+		// set up the rules
+		ci()->form_validation->set_rules(static::$rules);
+
+		$return = false;
+		// validate
+		if (ci()->form_validation->run())
+		{
+			$return = true;
+		}
+		else
+		{
+			$this->messages = validation_errors();
+		}
+
+		foreach (static::$rules as $rule)
+		{
+			$field = $rule['field'];
+
+			if ((bool) form_error($field))
+			{
+				$this->errorFields[] = $field;
+			}
+			else
+			{
+				$this->validatedFields[] = $field;
+			}
+
+			$this->allFields[$field] = ! (bool) form_error($field);
+		}
+
+		return $return;
+	}
+
+	public function getMessages()
+	{
+		return $this->messages;
+	}
+
+	public function getValidateVars()
+	{
+		return $this->validateVars;
+	}
+
+	public function getErrorFields()
+	{
+		return $this->errorFields;
+	}
+
+	public function getValidtedFields()
+	{
+		return $this->validatedFields;
+	}
+
+	public function getAllFields()
+	{
+		return $this->allFields;
 	}
 
 }
