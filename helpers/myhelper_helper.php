@@ -53,17 +53,17 @@ function month_array($lang = 'en')
 /*
 Array
 (
-    [2013] => 2013
-    [2012] => 2012
-    [2011] => 2011
-    [2010] => 2010
-    [2009] => 2009
-    [2008] => 2008
-    [2007] => 2007
-    [2006] => 2006
-    [2005] => 2005
-    [2004] => 2004
-    [2003] => 2003
+	[2013] => 2013
+	[2012] => 2012
+	[2011] => 2011
+	[2010] => 2010
+	[2009] => 2009
+	[2008] => 2008
+	[2007] => 2007
+	[2006] => 2006
+	[2005] => 2005
+	[2004] => 2004
+	[2003] => 2003
 )
 
 */
@@ -375,13 +375,13 @@ function ends_with($haystack, $needle)
 function array_search_recursive($needle,$haystack, $strict=false, $path=array())
 {
  foreach ($haystack as $i => $x) {
-    if (is_array($x)) {
-      $b = find($needle, $x);
-      if ($b) return count($haystack) > 1 ? array($i, $x) : $b;
-    }
-    else if ($x == $needle) {
-      return array($i, $x);
-    }
+	if (is_array($x)) {
+	  $b = find($needle, $x);
+	  if ($b) return count($haystack) > 1 ? array($i, $x) : $b;
+	}
+	else if ($x == $needle) {
+	  return array($i, $x);
+	}
   }
 
   return false;
@@ -393,22 +393,22 @@ It gives print_r() the task of checking for infinite recursion (which it does we
  */
 function array_depth($array)
 {
-    $max_indentation = 1;
+	$max_indentation = 1;
 
-    $array_str = print_r($array, true);
-    $lines = explode("\n", $array_str);
+	$array_str = print_r($array, true);
+	$lines = explode("\n", $array_str);
 
-    foreach ($lines as $line)
-    {
-    	$indentation = (strlen($line) - strlen(ltrim($line))) / 4;
+	foreach ($lines as $line)
+	{
+		$indentation = (strlen($line) - strlen(ltrim($line))) / 4;
 
-    	if ($indentation > $max_indentation)
-    	{
-    		$max_indentation = $indentation;
-    	}
-    }
+		if ($indentation > $max_indentation)
+		{
+			$max_indentation = $indentation;
+		}
+	}
 
-    return ceil(($max_indentation - 1) / 2) + 1;
+	return ceil(($max_indentation - 1) / 2) + 1;
 }
 
 
@@ -469,21 +469,21 @@ function strpos_array(array $haystack, $needle = '', $case_sensitive = false)
 */
 function array_insert($array, $insert, $position)
 {
-    foreach ($array as $key => $value)
-    {
-            if ($i == $position)
-            {
-                    foreach ($insert as $ikey => $ivalue)
-                    {
-                            $ret[$ikey] = $ivalue;
-                    }
-            }
+	foreach ($array as $key => $value)
+	{
+			if ($i == $position)
+			{
+					foreach ($insert as $ikey => $ivalue)
+					{
+							$ret[$ikey] = $ivalue;
+					}
+			}
  
-            $ret[$key] = $value;
-            $i++;
-    }
+			$ret[$key] = $value;
+			$i++;
+	}
  
-    return $ret;
+	return $ret;
 }
 
 function days_old_diff($startTimestamp, $endTimestamp = null, $mode = null)
@@ -585,24 +585,39 @@ function recursive_copy($src, $dst)
 
 function hex2rgb($hex)
 {
-   $hex = str_replace("#", "", $hex);
+	$hex = str_replace("#", "", $hex);
 
-   if (strlen($hex) == 3)
-   {
-      $r = hexdec(substr($hex, 0, 1).substr($hex, 0, 1));
-      $g = hexdec(substr($hex, 1, 1).substr($hex, 1, 1));
-      $b = hexdec(substr($hex, 2, 1).substr($hex, 2, 1));
-   }
-   else
-   {
-      $r = hexdec(substr($hex, 0, 2));
-      $g = hexdec(substr($hex, 2, 2));
-      $b = hexdec(substr($hex, 4, 2));
-   }
-   $rgb = array($r, $g, $b);
-   
-   return $rgb;
+	if (strlen($hex) == 3)
+	{
+		$r = hexdec(substr($hex, 0, 1).substr($hex, 0, 1));
+		$g = hexdec(substr($hex, 1, 1).substr($hex, 1, 1));
+		$b = hexdec(substr($hex, 2, 1).substr($hex, 2, 1));
+	}
+	else
+	{
+		$r = hexdec(substr($hex, 0, 2));
+		$g = hexdec(substr($hex, 2, 2));
+		$b = hexdec(substr($hex, 4, 2));
+	}
+
+	$rgb = array($r, $g, $b);
+
+	return $rgb;
 }
+
+function array_reverse_recursive($array, $preserve_keys = false)
+{
+	foreach ($array as $key => $val)
+	{
+		if (is_array($val))
+		{
+			$array[$key] = array_reverse_recursive($val);
+		}
+	}
+
+	return array_reverse($array, $preserve_keys);
+}
+
 
 // function array_get($array, $key, $default = null)
 // {
