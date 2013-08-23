@@ -618,6 +618,10 @@ function array_reverse_recursive($array, $preserve_keys = false)
 	return array_reverse($array, $preserve_keys);
 }
 
+function dq()
+{
+	return Illuminate\Database\Capsule\Manager::connection()->getQueryLog();
+}
 
 // function array_get($array, $key, $default = null)
 // {
