@@ -95,7 +95,8 @@ function age($p_strDate)
 	return $years;
 }
 
-function my_create_pagination($uri, $total_rows, $limit = NULL, $uri_segment = 4, $full_tag_wrap = TRUE, $prefix = NULL, $segment_count = 1)
+// this should be app specific probably :( will solve later
+function _my_create_pagination($uri, $total_rows, $limit = NULL, $uri_segment = 4, $full_tag_wrap = TRUE, $prefix = NULL, $segment_count = 1)
 {
 	// Prefix current language
 	//$uri = CURRENT_LANGUAGE.'/'.$uri;
@@ -618,7 +619,23 @@ function array_reverse_recursive($array, $preserve_keys = false)
 	return array_reverse($array, $preserve_keys);
 }
 
+
+
 function dq()
+{
+	$CI =& get_instance();
+	
+	
+		$style = 'width:96%; margin:1em; overflow:auto;text-align:left; font-family:Courier; font-size:0.86em; background:#efe none; color:#000; text-align:left; border:solid 1px;padding:0.42em';
+	echo "<fieldset style='$style'>";
+			echo    '<legend>last SQL query dumper:</legend>';        
+			echo    "<pre style='width:58.88%; margin:-1.2em 0 1em 9.0em;overflow:auto'>";
+				echo $CI->db->last_query();
+			echo '</pre>';
+	echo '</fieldset>';
+}
+
+function edq()
 {
 	return Illuminate\Database\Capsule\Manager::connection()->getQueryLog();
 }
