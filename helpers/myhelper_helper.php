@@ -619,6 +619,22 @@ function array_reverse_recursive($array, $preserve_keys = false)
 	return array_reverse($array, $preserve_keys);
 }
 
+/*
+	Translated helpers
+*/
+function tdropdown($array, $field = 'title', $lang = null)
+{
+	($lang === null) and $lang = ci()->translate->def();
+
+	$new_array = array();
+
+	foreach ($array as $v)
+	{
+		$new_array[$v['id']] = $v['translated'][$lang][$field];
+	}
+
+	return $new_array;
+}
 
 
 function dq()
