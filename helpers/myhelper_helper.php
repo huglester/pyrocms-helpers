@@ -312,19 +312,20 @@ function array_paginate($array = array(), $per_page = 5)
 	$page_nr = 1;
 
 	$new_array = array();
-	$array_key = 0;
 
-	while ($page_nr <= $page_count){
-		$i = 1;
-		while ($i <= $per_page){
+	while ($page_nr <= $page_count)
+	{
+		$i = 1; // start with per_page 1
+		while ($i <= $per_page)
+		{
+			$item = array_shift($array);
 
-			if($array_key < $total)
-			{
-				$new_array[$page_nr][] = $array[$array_key];
-			}
+			( ! isset($new_array[$page_nr])) and $new_array[$page_nr] = array();
+			$new_array[$page_nr][] = $item;
+
 			$i++;
-			$array_key++;
 		}
+
 		$page_nr++;
 	}
 
