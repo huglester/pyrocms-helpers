@@ -307,26 +307,26 @@ function pages_build_tree_select($params)
 function array_paginate($array = array(), $per_page = 5)
 {
 	$total = count($array);
-	$page_count = ceil($total / $per_page);
 
 	$page_nr = 1;
 
 	$new_array = array();
 
-	while ($page_nr <= $page_count)
+	$i = 0;
+	foreach ($array as $k => $v)
 	{
-		$i = 1; // start with per_page 1
-		while ($i <= $per_page)
+		++$i;
+
+		( ! isset($new_array[$page_nr])) and $new_array[$page_nr] = array();
+
+		// preserve keys
+		$new_array[$page_nr][$k] = $v;
+
+		// increase page number
+		if ($i === $per_page)
 		{
-			$item = array_shift($array);
-
-			( ! isset($new_array[$page_nr])) and $new_array[$page_nr] = array();
-			$new_array[$page_nr][] = $item;
-
-			$i++;
+			++$page_nr;
 		}
-
-		$page_nr++;
 	}
 
 	return $new_array;
