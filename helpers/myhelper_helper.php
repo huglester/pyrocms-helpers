@@ -637,6 +637,28 @@ function tdropdown($array, $field = 'title', $lang = null)
 	return $new_array;
 }
 
+/*
+	Checks if selected pivot model has the key
+	useful with using checkboxes for multi-selects
+*/
+function selected_pivot($input, $value)
+{
+	if ($input instanceOf Illuminate\Database\Eloquent\Collection)
+	{
+		$input = $input->toArray();
+	}
+
+	foreach ($input as $i)
+	{
+		if ($value == $i['id'])
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 
 function dq()
 {

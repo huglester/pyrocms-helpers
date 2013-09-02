@@ -43,6 +43,19 @@ class EloquentTranslated extends Eloquent {
 		return ($success) ? parent::update($attributes) : false;
 	}
 
+	public function delete()
+	{
+		// delete old items
+		EloquentTranslatedModel::items_delete(strtolower(get_called_class()), $this->id);
+
+		return parent::delete();
+	}
+
+	public static function destroy($ids)
+	{
+		throw new \Exception("Please call delete() on translated models");
+	}
+
 	public function getTranslatedAttribute()
 	{
 		return $this->translated(); // without this, child elements were not working
