@@ -72,6 +72,15 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		return $obj->save();
 	}
 
+	// For use with: User_m::update_order_simple(1, $order); and not touch the timestamps
+	public static function update_order_simple($id, $order)
+	{
+		$obj = new static;
+		$table = $obj->getTable();
+
+		return Capsule::connection()->table($table)->where('id', $id)->update(array('order' => $order));
+	}
+
 	public static function exists($field, $value, $lang = null, $pk_id = 0)
 	{
 		// fallback to default language
