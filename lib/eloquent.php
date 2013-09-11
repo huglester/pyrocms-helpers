@@ -17,6 +17,8 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 	protected $errorFields; // array ('title');
 	protected $allFields; // used for jquery each... array ('title' => false, 'comment' => true)
 
+	protected $myWhereExists; // needed for findCreate()
+
 	public function scopeActive($query)
 	{
 		return $query->where('is_active', '=', 1);
@@ -311,6 +313,33 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		}
 
 		return $return;
+	}
+
+	public static function findCreate(array $attributes)
+	{
+		if ( ! $obj = static::myWhereExists($attributes))
+		{
+			return parent::create($attributes);
+		}
+
+		return $obj;
+	}
+
+	public static function myWhereExists(array $attributes)
+	{
+		$query = new static();
+
+		if ( ! isset($query->myWhereExists) or count($query->myWhereExists) === 0)
+		{
+			throw new Exception("At least one protected $myWhereExists should be set to use findCreate() method.");
+		}
+
+		foreach ($query->myWhereExists as $key)
+		{
+			$query = $query->where($key, array_get($attributes, $key));
+		}
+
+		return $query->first();
 	}
 
 	public function getMessages()
