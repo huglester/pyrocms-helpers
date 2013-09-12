@@ -475,18 +475,18 @@ if ( ! function_exists('array_insert') )
 	{
 		foreach ($array as $key => $value)
 		{
-				if ($i == $position)
+			if ($i == $position)
+			{
+				foreach ($insert as $ikey => $ivalue)
 				{
-						foreach ($insert as $ikey => $ivalue)
-						{
-								$ret[$ikey] = $ivalue;
-						}
+						$ret[$ikey] = $ivalue;
 				}
-	 
-				$ret[$key] = $value;
-				$i++;
+			}
+
+			$ret[$key] = $value;
+			$i++;
 		}
-	 
+
 		return $ret;
 	}
 }
