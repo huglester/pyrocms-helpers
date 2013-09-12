@@ -469,23 +469,26 @@ function strpos_array(array $haystack, $needle = '', $case_sensitive = false)
 /*
 	Insert given array in specific position
 */
-function array_insert($array, $insert, $position)
+if ( ! function_exists('array_insert') )
 {
-	foreach ($array as $key => $value)
+	function array_insert($array, $insert, $position)
 	{
-			if ($i == $position)
-			{
-					foreach ($insert as $ikey => $ivalue)
-					{
-							$ret[$ikey] = $ivalue;
-					}
-			}
- 
-			$ret[$key] = $value;
-			$i++;
+		foreach ($array as $key => $value)
+		{
+				if ($i == $position)
+				{
+						foreach ($insert as $ikey => $ivalue)
+						{
+								$ret[$ikey] = $ivalue;
+						}
+				}
+	 
+				$ret[$key] = $value;
+				$i++;
+		}
+	 
+		return $ret;
 	}
- 
-	return $ret;
 }
 
 function days_old_diff($startTimestamp, $endTimestamp = null, $mode = null)
