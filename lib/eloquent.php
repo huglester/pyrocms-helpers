@@ -80,7 +80,7 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		$obj = new static;
 		$table = $obj->getTable();
 
-		return Capsule::connection()->table($table)->where('id', $id)->update(array('order' => $order));
+		return Capsule::connection()->table($table)->where($obj->primaryKey, $id)->update(array('order' => $order));
 	}
 
 	public static function exists($field, $value, $lang = null, $pk_id = 0)
