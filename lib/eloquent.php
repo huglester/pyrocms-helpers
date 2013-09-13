@@ -325,16 +325,35 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		return $obj;
 	}
 
-	public static function myWhereExists(array $attributes)
+	public static function createUpdate(array $attributes)
 	{
-		if ( ! isset($query->myWhereExists) or count($query->myWhereExists) === 0)
+		if ($obj = static::myWhereExists($attributes))
 		{
-			throw new Exception("$myWhereExists should be and array of at least one key > value in order to use findCreate() method.");
+			$obj->fill($attributes);
+			$obj->save();
 		}
+		else
+		{
+			return parent::create($attributes);
+		}
+		
+		return $obj;
+	}
 
+	public static function myWhereExists(array $attributes, $myWhereExists = array())
+	{
 		$query = new static();
 
-		foreach ($query->myWhereExists as $key)
+		if (
+				( ! isset($query->myWhereExists) or count($query->myWhereExists) === 0) 
+			and count($myWhereExists) === 0)
+		{
+			throw new Exception("$myWhereExists should be and array of at least one key in order to use myWhereExists() method.");
+		}
+
+		$myWhereExists = (count($myWhereExists) > 0) ? $myWhereExists : $query->myWhereExists;
+
+		foreach ($myWhereExists as $key)
 		{
 			$query = $query->where($key, array_get($attributes, $key));
 		}
