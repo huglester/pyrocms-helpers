@@ -327,12 +327,12 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 
 	public static function myWhereExists(array $attributes)
 	{
-		$query = new static();
-
 		if ( ! isset($query->myWhereExists) or count($query->myWhereExists) === 0)
 		{
-			throw new Exception("At least one protected $myWhereExists should be set to use findCreate() method.");
+			throw new Exception("$myWhereExists should be and array of at least one key > value in order to use findCreate() method.");
 		}
+
+		$query = new static();
 
 		foreach ($query->myWhereExists as $key)
 		{

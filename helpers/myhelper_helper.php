@@ -466,27 +466,28 @@ function strpos_array(array $haystack, $needle = '', $case_sensitive = false)
 	return false;
 }
  
-/*
-	Insert given array in specific position
-*/
-if ( ! function_exists('array_insert') )
+
+if ( ! function_exists('hug_array_insert') )
 {
-	function array_insert($array, $insert, $position)
+	/*
+		Insert given array in specific position
+	*/
+	function hug_array_insert($array, $insert, $position)
 	{
 		foreach ($array as $key => $value)
 		{
-			if ($i == $position)
-			{
-				foreach ($insert as $ikey => $ivalue)
+				if ($i == $position)
 				{
-						$ret[$ikey] = $ivalue;
+						foreach ($insert as $ikey => $ivalue)
+						{
+								$ret[$ikey] = $ivalue;
+						}
 				}
-			}
-
-			$ret[$key] = $value;
-			$i++;
+	 
+				$ret[$key] = $value;
+				$i++;
 		}
-
+	 
 		return $ret;
 	}
 }
