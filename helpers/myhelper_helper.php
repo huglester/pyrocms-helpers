@@ -683,6 +683,50 @@ function edq()
 	return Illuminate\Database\Capsule\Manager::connection()->getQueryLog();
 }
 
+function invoice_pad($input, $pad_length = 4, $pad_string = "0")
+{
+	return str_pad($input, $pad_length, $pad_string, STR_PAD_LEFT);
+}
+
+function default_value($value = null, $default = null)
+{
+	return ($value) ?: $default;
+}
+
+/*
+ * Transforms string:
+ * 1=Business|2=Individual
+ *
+ * to:
+ *
+ * array (
+ *  1 => 'Business',
+ *  2 => 'Individual',
+ * );
+ *
+ * for use with form_dropdown();
+ * */
+function string_to_dropdown($string)
+{
+	$array = explode('|', $string);
+	$new_array = array();
+	foreach ($array as $item)
+	{
+		$item = explode('=', $item);
+
+		if (count($item) != 2)
+		{
+			throw new Exception('Syntax should be 1=Business|2=Individual');
+		}
+
+		// If they didn't specify a key=>value (example: name=Your Name) then we'll use the value for the key also
+		$new_array[$item[0]] = $item[1];
+	}
+
+	return $new_array;
+}
+
+
 // function array_get($array, $key, $default = null)
 // {
 // 	if (is_array($array))
