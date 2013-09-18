@@ -719,6 +719,14 @@ function string_to_dropdown($string)
 	return $new_array;
 }
 
+// returns something like
+// parent_id=3&action=delete
+function uri_get_params()
+{
+	$get = ci()->input->get();
+
+	return http_build_query($get);
+}
 
 // function array_get($array, $key, $default = null)
 // {
