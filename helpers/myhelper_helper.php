@@ -476,7 +476,7 @@ if ( ! function_exists('hug_array_insert') )
 	{
 		if (count($original) < abs($pos))
 		{
-			throw new \InvalidArgumentException('Position larger than number of elements in array in which to insert.');
+			throw new \Exception('Position larger than number of elements in array in which to insert.');
 		}
 
 		array_splice($original, $pos, 0, $value);
