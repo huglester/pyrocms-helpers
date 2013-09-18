@@ -725,7 +725,12 @@ function uri_get_params()
 {
 	$get = ci()->input->get();
 
-	return http_build_query($get);
+	if ($get and is_array($get))
+	{
+		return http_build_query($get);
+	}
+
+	return null;
 }
 
 // function array_get($array, $key, $default = null)
