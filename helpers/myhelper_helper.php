@@ -472,23 +472,16 @@ if ( ! function_exists('hug_array_insert') )
 	/*
 		Insert given array in specific position
 	*/
-	function hug_array_insert($array, $insert, $position)
+	function hug_array_insert(array &$original, $value, $pos)
 	{
-		foreach ($array as $key => $value)
+		if (count($original) < abs($pos))
 		{
-				if ($i == $position)
-				{
-						foreach ($insert as $ikey => $ivalue)
-						{
-								$ret[$ikey] = $ivalue;
-						}
-				}
-	 
-				$ret[$key] = $value;
-				$i++;
+			throw new \InvalidArgumentException('Position larger than number of elements in array in which to insert.');
 		}
-	 
-		return $ret;
+
+		array_splice($original, $pos, 0, $value);
+
+		return $original;
 	}
 }
 
