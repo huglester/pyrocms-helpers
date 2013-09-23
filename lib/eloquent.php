@@ -50,6 +50,48 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		return $query;
 	}
 
+	/*
+	* Allows us, for example if we have `image` field, to get the array of dynamic photo sizes.
+	* ModulenameSettings should have suffix ('_thumb' and '_height') in order to appear here automatically like:
+	* thumb_width, thumb_height;
+	* avatar_width, avatar_height
+	* result will be
+	array(3) {
+	  'thumb' => "http://egomuzika.driversbay.eu/photobanks/3/102x102x85/6981344ce40ce182afe6a08c3b301491.jpg",
+	  'avatar' => "http://egomuzika.driversbay.eu/photobanks/3/50x30x85/6981344ce40ce182afe6a08c3b301491.jpg",
+	}
+	*/
+	public function getDynamicUrlAttribute()
+	{
+		ci()->load->model('photobanks/photobankssetting_m');
+		$path = PhotobanksSetting_m::item('upload_path');
+
+		$sizes = array();
+
+		if ($this->image)
+		{	
+			$module_name = str_replace('_m', '', get_called_class());
+			$model_name = ucfirst($module_name).'Setting_m';
+
+			ci()->load->model(array(
+				$module_name.'/'.strtolower($model_name),
+			));
+			
+			$keys = filter_by_key_suffix($model_name::item(), '_width', true);
+
+			foreach ($keys as $key => $v)
+			{
+				$quality = array_get($model_name::item(), $key.'_quality', 85);
+
+				$size = $model_name::item($key.'_width').'x'.$model_name::item($key.'_height').'x'.$quality;
+
+				$sizes[$key] = base_url().$path.$this->id.'/'.$size.'/'.$this->image;
+			}
+		}
+
+		return $sizes;
+	}
+
 	// unix timestamp support
 	public function getDates()
 	{
