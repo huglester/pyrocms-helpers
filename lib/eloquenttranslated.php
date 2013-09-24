@@ -102,7 +102,7 @@ class EloquentTranslated extends Eloquent {
 		$results = parent::toArray();
 		
 		$results['translated'] = $this->translated();
-		$results['image_dynamic'] = $this->image_dynamic;
+		// $results['image_dynamic'] = $this->image_dynamic;
 
 		return $results;
 	}
