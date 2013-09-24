@@ -51,17 +51,17 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 	}
 
 	/*
-	* Allows us, for example if we have `image` field, to get the array of dynamic photo sizes.
-	* ModulenameSettings should have suffix ('_thumb' and '_height') in order to appear here automatically like:
-	* thumb_width, thumb_height;
-	* avatar_width, avatar_height
-	* result will be
-	array(3) {
-	  'thumb' => "http://egomuzika.driversbay.eu/photobanks/3/102x102x85/6981344ce40ce182afe6a08c3b301491.jpg",
-	  'avatar' => "http://egomuzika.driversbay.eu/photobanks/3/50x30x85/6981344ce40ce182afe6a08c3b301491.jpg",
-	}
+	 * Allows us, for example if we have `image` field, to get the array of dynamic photo sizes.
+	 * ModulenameSettings should have suffix ('_thumb' and '_height') in order to appear here automatically like:
+	 * thumb_width, thumb_height;
+	 * avatar_width, avatar_height
+	 * result will be
+	   array(3) {
+	       'http://example.com/photobanks/modules/317x317x85/uploads/default/katalogas/f90a0607f6c6660eaedd91314fc2609a.jpg',
+	       'http://example.com/photobanks/modules/180x180x85/uploads/default/katalogas/f90a0607f6c6660eaedd91314fc2609a.jpg',
+	   }
 	*/
-	public function getDynamicUrlAttribute()
+	public function getImageDynamicAttribute()
 	{
 		ci()->load->model('photobanks/photobankssetting_m');
 		$path = PhotobanksSetting_m::item('upload_path');
@@ -77,15 +77,11 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 				$module_name.'/'.strtolower($model_name),
 			));
 			
-			$keys = filter_by_key_suffix($model_name::item(), '_width', true);
+			$sizes_arr = explode('|', $model_name::item('image_dynamic'));
 
-			foreach ($keys as $key => $v)
+			foreach ($sizes_arr as $size)
 			{
-				$quality = array_get($model_name::item(), $key.'_quality', 85);
-
-				$size = $model_name::item($key.'_width').'x'.$model_name::item($key.'_height').'x'.$quality;
-
-				$sizes[$key] = base_url().$path.$this->id.'/'.$size.'/'.$this->image;
+				$sizes[] = base_url().'photobanks/modules/'.$size.'/uploads/default/'.strtolower($module_name).'/'.$this->image;
 			}
 		}
 
@@ -426,6 +422,14 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 	public function getAllFields()
 	{
 		return $this->allFields;
+	}
+
+	public function toArray()
+	{
+		$results = parent::toArray();
+		$results['image_dynamic'] = $this->image_dynamic;
+
+		return $results;
 	}
 
 }
