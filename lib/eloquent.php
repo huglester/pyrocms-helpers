@@ -73,7 +73,8 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 			$module_name = str_replace('_m', '', get_called_class());
 			$model_name = ucfirst($module_name).'Setting_m';
 
-			log_message('Error', 'image dynamic...'.$model_name);
+			log_message('Error', 'model_name...'.$model_name);
+			log_message('Error', 'module_name...'.$module_name);
 
 			ci()->load->model(array(
 				$module_name.'/'.strtolower($model_name),
