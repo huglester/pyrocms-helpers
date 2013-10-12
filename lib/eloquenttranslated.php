@@ -12,11 +12,20 @@ class EloquentTranslated extends Eloquent {
 		if ($results = parent::create($attributes))
 		{
 			$parent_id = $results->getAttribute('id');
+			$uid = $results->getAttribute('uid');
 
 			$translated = filter_by_key_prefix($attributes, 'translated_', true);
-			$translated['module'] = strtolower(get_called_class());
-			$translated['parent_id'] = $parent_id;
 
+			if ($uid)
+			{
+				$translated['uid'] = $uid;
+			}
+			else
+			{
+				$translated['module'] = strtolower(get_called_class());
+				$translated['parent_id'] = $parent_id;
+			}
+			
 			// we create child translated
 			$success = EloquentTranslatedModel::create($translated);
 		}
@@ -28,14 +37,29 @@ class EloquentTranslated extends Eloquent {
 	{
 		$success = false;
 		$parent_id = $this->getAttribute('id');
+		$uid = $this->getAttribute('uid');
 
 		// delete old items
-		EloquentTranslatedModel::items_delete(strtolower(get_called_class()), $parent_id);
-
+		if ($uid)
+		{
+			EloquentTranslatedModel::items_delete(strtolower(get_called_class()), $parent_id, $uid);
+		}
+		else
+		{
+			EloquentTranslatedModel::items_delete(strtolower(get_called_class()), $parent_id);
+		}
 
 		$translated = filter_by_key_prefix($attributes, 'translated_', true);
-		$translated['module'] = strtolower(get_called_class());
-		$translated['parent_id'] = $parent_id;
+
+		if ($uid)
+		{
+			$translated['uid'] = $uid;
+		}
+		else
+		{
+			$translated['module'] = strtolower(get_called_class());
+			$translated['parent_id'] = $parent_id;
+		}
 
 		// we create child translated
 		$success = EloquentTranslatedModel::create($translated);
@@ -46,7 +70,14 @@ class EloquentTranslated extends Eloquent {
 	public function delete()
 	{
 		// delete old items
-		EloquentTranslatedModel::items_delete(strtolower(get_called_class()), $this->id);
+		if ($this->uid)
+		{
+			EloquentTranslatedModel::items_delete(strtolower(get_called_class()), $this->id, $this->uid);
+		}
+		else
+		{
+			EloquentTranslatedModel::items_delete(strtolower(get_called_class()), $this->id);
+		}
 
 		return parent::delete();
 	}
@@ -63,7 +94,7 @@ class EloquentTranslated extends Eloquent {
 
 	public function translated()
 	{
-		return EloquentTranslatedModel::items(strtolower(get_called_class()), $this->id);
+		return EloquentTranslatedModel::items(strtolower(get_called_class()), $this->id, $this->uid);
 	}
 
 	/**
