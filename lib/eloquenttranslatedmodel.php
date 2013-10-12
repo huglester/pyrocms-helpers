@@ -21,6 +21,7 @@ class EloquentTranslatedModel extends Eloquent {
 	public    $timestamps = false;
 
 	public $fillable = array(
+		'uid',
 		'module',
 		'parent_id',
 		'key',
