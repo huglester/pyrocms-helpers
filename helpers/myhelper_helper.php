@@ -673,7 +673,8 @@ function dq()
 
 function edq()
 {
-	return Illuminate\Database\Capsule\Manager::connection()->getQueryLog();
+	$log = Illuminate\Database\Capsule\Manager::connection()->getQueryLog();
+	d($log);
 }
 
 function invoice_pad($input, $pad_length = 4, $pad_string = "0")
