@@ -40,14 +40,7 @@ class EloquentTranslated extends Eloquent {
 		$uid = $this->getAttribute('uid');
 
 		// delete old items
-		if ($uid)
-		{
-			EloquentTranslatedModel::items_delete(strtolower(get_called_class()), $parent_id, $uid);
-		}
-		else
-		{
-			EloquentTranslatedModel::items_delete(strtolower(get_called_class()), $parent_id);
-		}
+		EloquentTranslatedModel::items_delete(strtolower(get_called_class()), $parent_id, $uid);
 
 		$translated = filter_by_key_prefix($attributes, 'translated_', true);
 
@@ -70,14 +63,7 @@ class EloquentTranslated extends Eloquent {
 	public function delete()
 	{
 		// delete old items
-		if ($this->uid)
-		{
-			EloquentTranslatedModel::items_delete(strtolower(get_called_class()), $this->id, $this->uid);
-		}
-		else
-		{
-			EloquentTranslatedModel::items_delete(strtolower(get_called_class()), $this->id);
-		}
+		EloquentTranslatedModel::items_delete(strtolower(get_called_class()), $this->id, $this->uid);
 
 		return parent::delete();
 	}
