@@ -73,9 +73,14 @@ class TinySwift
 				->setUsername(Settings::get('mail_smtp_user'))
 				->setPassword(Settings::get('mail_smtp_pass'));
 		}
+		elseif ($protocol == 'mail')
+		{
+			$transport = Swift_MailTransport::newInstance();
+		}
+		// Sendmail left..
 		else
 		{
-			$transport = Swift_SmtpTransport::newInstance('localhost');
+			$transport = Swift_SendmailTransport::newInstance(Settings::get('mail_sendmail_path', '/usr/sbin/sendmail -bs'));
 		}
 
 		( ! isset($reply_to) or ! $reply_to) and $reply_to = $from;
