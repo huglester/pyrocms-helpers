@@ -3,7 +3,7 @@
 class TinySwift
 {
 
-	function send($data = array())
+	public function send($data = array())
 	{
 		if ( ! is_array($data))
 		{
@@ -80,6 +80,12 @@ class TinySwift
 		// Sendmail left..
 		else
 		{
+			// You can run the Sendmail Transport in two different modes specified by command line flags:
+			// 	"-bs" runs in SMTP mode so theoretically it will act like the SMTP Transport
+			// 	"-t" runs in piped mode with no feedback, but theoretically faster, though not advised.
+			// If you run sendmail in "-t" mode you will get no feedback as to whether or not sending has succeeded.
+			// Use "-bs" unless you have a reason not to.
+
 			$transport = Swift_SendmailTransport::newInstance(Settings::get('mail_sendmail_path', '/usr/sbin/sendmail -bs'));
 		}
 
@@ -117,6 +123,8 @@ class TinySwift
 			}
 		}
 
+		// Send the message
+		// returns count of sent messages
 		return $mailer->send($message);
 	}
 }
