@@ -188,8 +188,9 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 			}
 		}
 
+		// we don't want to generate UID for translated model calls
 		// auto generate UID if we have this field
-		if ( ! isset($attributes['uid']) or ! $attributes['uid'])
+		if (get_called_class() != 'EloquentTranslatedModel' and ( ! isset($attributes['uid']) or ! $attributes['uid']))
 		{
 			if (isset($fillable) and in_array('uid', $fillable))
 			{

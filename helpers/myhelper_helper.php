@@ -754,8 +754,7 @@ function uri_get_params()
 function strposa($haystack, $needle, $offset=0)
 {
 	if ( ! is_array($needle)) $needle = array($needle);
-	
-	$pos = null;
+
 	foreach($needle as $k => $query)
 	{
 		if (strpos($haystack, $query, $offset) !== false) return $k; // stop on first true result
