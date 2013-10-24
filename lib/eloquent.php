@@ -19,6 +19,14 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 
 	protected $myWhereExists; // needed for findCreate()
 
+	protected static $dispatcher;
+
+	protected static function boot()
+	{
+		parent::boot();
+		static::$dispatcher = new Illuminate\Events\Dispatcher;
+	}
+
 	public function scopeActive($query)
 	{
 		return $query->where('is_active', '=', 1);
