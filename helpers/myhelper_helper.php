@@ -744,11 +744,11 @@ function uri_get_params()
 
 	if (strposa($string, $array, 1))
 	{
-	    echo 'true';
+		echo 'true';
 	}
 	else
 	{
-	    echo 'false';
+		echo 'false';
 	}
 */
 function strposa($haystack, $needle, $offset=0)
@@ -761,6 +761,11 @@ function strposa($haystack, $needle, $offset=0)
 	}
 
 	return false;
+}
+
+function is_weekend($date)
+{
+	return (date('N', strtotime($date)) >= 6);
 }
 
 // function array_get($array, $key, $default = null)
