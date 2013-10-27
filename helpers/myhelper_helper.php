@@ -894,5 +894,5 @@ function strposa($haystack, $needle, $offset=0)
 
 function is_weekend($date)
 {
-	return (date('N', strtotime($date)) >= 6);
+	return (date('N', $date) >= 6);
 }
