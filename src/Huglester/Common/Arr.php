@@ -59,7 +59,7 @@ class Arr
 			{
 				if ( ! is_array($array) or ! array_key_exists($key_part, $array))
 				{
-					return \Fuel::value($default);
+					return result($default);
 				}
 			}
 
