@@ -896,3 +896,32 @@ function is_weekend($date)
 {
 	return (date('N', $date) >= 6);
 }
+
+if ( ! function_exists('recursive_rmdir'))
+{
+	function recursive_rmdir($dir)
+	{
+		if (is_dir($dir))
+		{
+			$objects = scandir($dir);
+
+			foreach ($objects as $object)
+			{
+				if ($object != "." && $object != "..")
+				{
+					if (filetype($dir."/".$object) == "dir")
+					{
+						recursive_rmdir($dir."/".$object);
+					}
+					else
+					{
+						@unlink($dir."/".$object);
+					}
+				}
+			}
+
+			reset($objects);
+			@rmdir($dir);
+		}
+	}
+}
