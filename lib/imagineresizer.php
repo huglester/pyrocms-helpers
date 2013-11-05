@@ -340,16 +340,8 @@ class ImagineResizer
 
 			// only if paths are different
 			// or if we have a watermark, and want to overwrite original photo...
-			if ($dest != $this->full_path or $this->watermark)
+			if ($dest != $this->full_path)
 			{
-				// do we need to apply a watermark?
-				if ($this->watermark)
-				{
-					// we get position for our watermark
-					$watermark_point = $this->getWatermarkPos($box, $srcBox);
-					$image->paste($this->watermark, $watermark_point);
-				}
-
 				// we use this, since we want to preserve watermark, quality. Can't simply copy()
 				$image
 					->save($destination.$filename, array('quality' => $quality));
