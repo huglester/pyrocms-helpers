@@ -114,13 +114,22 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 	// For use with: User_m::update_order(1, $order);
 	public static function update_order($id, $order)
 	{
-		// TODO change to DB ?
-		$order = (int) $order;
+		// Probably better to use DB instead of ELoquent anyway.
+		// $order = (int) $order;
 
-		$obj = static::find($id);
-		$obj->order = (int) $order;
+		// $obj = static::find($id);
+		// if ($obj)
+		// {
+		// 	$obj->order = (int) $order;
+		// 	return $obj->save();
+		// }
 
-		return $obj->save();
+		// return false;
+
+		$obj = new static;
+		$table = $obj->getTable();
+
+		return Capsule::connection()->table($table)->where($obj->primaryKey, $id)->update(array('order' => $order));
 	}
 
 	// For use with: User_m::update_order_simple(1, $order); and not touch the timestamps
