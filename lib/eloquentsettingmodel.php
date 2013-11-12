@@ -14,11 +14,11 @@ class EloquentSettingModel extends Illuminate\Database\Eloquent\Model {
 		'company_upload_path',
 	);
 
-	public static function item($key = null, $default = null)
+	public static function item($key = null, $default = null, $force_reget = false)
 	{
 		static $settings;
 
-		if ( ! $settings)
+		if ( ! $settings or $force_reget)
 		{
 			$settings = static::first();
 
@@ -40,6 +40,11 @@ class EloquentSettingModel extends Illuminate\Database\Eloquent\Model {
 		}
 		else
 		{
+			if ($default)
+			{
+				return $default;
+			}
+
 			throw new Exception("Settings key not found!");
 		}
 	}
