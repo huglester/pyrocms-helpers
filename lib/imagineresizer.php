@@ -33,10 +33,10 @@ class ImagineResizer
 	public function __construct($full_path)
 	{
 		$this->file = new File($full_path);
+		$this->full_path = $this->file->getRealPath();
 
 		$this->validateImage(); // validating an image
 
-		$this->full_path = $this->file->getRealPath();
 	}
 
 	public function setWatermark($full_path)
@@ -401,12 +401,23 @@ class ImagineResizer
 	protected function validateImage()
 	{
 		$mime = $this->file->getMimeType();
-		if (strpos($mime, 'image/') !== 0)
+
+		if ($mime and strpos($mime, 'image/') === 0)
 		{
-			throw new Exception("Not an image. Mime type: {$mime}...\n");
+			return true;
+		}
+		// fallback to simple check method
+		else 
+		{
+			list($width, $height, $type, $attr) = @getimagesize($this->full_path);
+			
+			if ($width and $height)
+			{
+				return true;
+			}
 		}
 
-		return true;
+		throw new Exception("Not an image. Mime type: {$mime}...\n");
 	}
 
 	protected function autoWidth($height)
