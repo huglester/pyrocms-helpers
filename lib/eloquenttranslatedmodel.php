@@ -70,11 +70,9 @@ class EloquentTranslatedModel extends Eloquent {
 				{
 					$input['uid'] = $uid;
 				}
-				else
-				{
-					$input['module'] = $attributes['module'];
-					$input['parent_id'] = $attributes['parent_id'];
-				}
+
+				$input['module'] = $attributes['module'];
+				$input['parent_id'] = $attributes['parent_id'];
 
 				if ($obj = parent::create($input))
 				{

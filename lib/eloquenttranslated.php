@@ -20,11 +20,10 @@ class EloquentTranslated extends Eloquent {
 			{
 				$translated['uid'] = $uid;
 			}
-			else
-			{
-				$translated['module'] = strtolower(get_called_class());
-				$translated['parent_id'] = $parent_id;
-			}
+			
+			$translated['module'] = strtolower(get_called_class());
+			$translated['parent_id'] = $parent_id;
+		
 			
 			// we create child translated
 			$success = EloquentTranslatedModel::create($translated);
@@ -48,11 +47,9 @@ class EloquentTranslated extends Eloquent {
 		{
 			$translated['uid'] = $uid;
 		}
-		else
-		{
-			$translated['module'] = strtolower(get_called_class());
-			$translated['parent_id'] = $parent_id;
-		}
+
+		$translated['module'] = strtolower(get_called_class());
+		$translated['parent_id'] = $parent_id;
 
 		// we create child translated
 		$success = EloquentTranslatedModel::create($translated);
