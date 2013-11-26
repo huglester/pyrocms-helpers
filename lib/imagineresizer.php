@@ -44,9 +44,8 @@ class ImagineResizer
 		$file = new File($full_path);
 
 		$imagine = new Imagine\Gd\Imagine();
-		$watermark = $imagine->open($file->getRealPath());
 		
-		$this->watermark = $watermark;
+		$this->watermark = $imagine->open($file->getRealPath());
 	}
 
 	public function setWatermarkPos($pos_y, $pos_x)
@@ -132,6 +131,36 @@ class ImagineResizer
 			if ($watermark_pos_x = (int) $watermark_pos_x)
 			{
 				$position_final_x -= $watermark_pos_x;
+			}
+		}
+
+		if (strpos($watermark_pos_x, 'center') !== false or strpos($watermark_pos_x, 'middle') !== false)
+		{
+			$mid1 = bcdiv($watermark->getWidth(), 2, 0); // get half of watermark
+			$mid2 = bcdiv($width, 2, 0); // get half of an image
+
+			$position_final_x = bcsub($mid2, $mid1, 0);
+
+			$watermark_pos_x = trim(str_replace(array('center', 'middle'), '', $watermark_pos_x));
+
+			if ($watermark_pos_x = (int) $watermark_pos_x)
+			{
+				$position_final_x += $watermark_pos_x;
+			}
+		}
+
+		if (strpos($watermark_pos_y, 'center') !== false or strpos($watermark_pos_y, 'middle') !== false)
+		{
+			$mid1 = bcdiv($watermark->getHeight(), 2, 0); // get half of watermark
+			$mid2 = bcdiv($height, 2, 0); // get half of an image
+
+			$position_final_y = bcsub($mid2, $mid1, 0);
+
+			$watermark_pos_y = trim(str_replace(array('center', 'middle'), '', $watermark_pos_y));
+
+			if ($watermark_pos_y = (int) $watermark_pos_y)
+			{
+				$position_final_y += $watermark_pos_y;
 			}
 		}
 
