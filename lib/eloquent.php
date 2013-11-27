@@ -18,6 +18,8 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 	protected $allFields; // used for jquery each... array ('title' => false, 'comment' => true)
 
 	protected $myWhereExists; // needed for findCreate()
+	protected $dynamic_override_model_name;
+	protected $dynamic_override_dir_key;
 
 	protected static $dispatcher;
 
@@ -72,24 +74,35 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 	public function getImageDynamicAttribute()
 	{
 		ci()->load->model('photobanks/photobankssetting_m');
-		$path = PhotobanksSetting_m::item('upload_path');
+		//$path = PhotobanksSetting_m::item('upload_path');
 
 		$sizes = array();
 
 		if ($this->image)
 		{	
-			$module_name = str_replace('_m', '', get_called_class());
+			$module_name = ($this->dynamic_override_model_name) ?: str_replace('_m', '', get_called_class());
+
 			$model_name = ucfirst($module_name).'Setting_m';
 
 			ci()->load->model(array(
 				$module_name.'/'.strtolower($model_name),
 			));
 			
-			$sizes_arr = explode('|', $model_name::item('image_dynamic'));
+			$sizes_arr = explode('|', PhotobanksSetting_m::item('image_dynamic'));
 
+			if ($this->dynamic_override_dir_key)
+			{
+				$upload_path = $model_name::item($this->dynamic_override_dir_key);
+			}
+			else
+			{
+				$upload_path = 'uploads/default/'.strtolower($module_name);
+			}
+
+			// $upload_path = ($this->dynamic_override_dir_key) ?:
 			foreach ($sizes_arr as $size)
 			{
-				$sizes[] = base_url().'photobanks/modules/'.$size.'/uploads/default/'.strtolower($module_name).'/'.$this->image;
+				$sizes[] = base_url().'photobanks/modules/'.$size.'/'.$upload_path.'/'.$this->image;
 			}
 		}
 
