@@ -12,15 +12,11 @@ class EloquentTranslated extends Eloquent {
 		if ($results = parent::create($attributes))
 		{
 			$parent_id = $results->getAttribute('id');
-			$uid = $results->getAttribute('uid');
+			$uid = (int) $results->getAttribute('uid');
 
 			$translated = filter_by_key_prefix($attributes, 'translated_', true);
 
-			if ($uid)
-			{
-				$translated['uid'] = $uid;
-			}
-			
+			$translated['uid'] = $uid;
 			$translated['module'] = strtolower(get_called_class());
 			$translated['parent_id'] = $parent_id;
 		
@@ -36,18 +32,14 @@ class EloquentTranslated extends Eloquent {
 	{
 		$success = false;
 		$parent_id = $this->getAttribute('id');
-		$uid = $this->getAttribute('uid');
+		$uid = (int) $this->getAttribute('uid');
 
 		// delete old items
 		EloquentTranslatedModel::items_delete(strtolower(get_called_class()), $parent_id, $uid);
 
 		$translated = filter_by_key_prefix($attributes, 'translated_', true);
-
-		if ($uid)
-		{
-			$translated['uid'] = $uid;
-		}
-
+		
+		$translated['uid'] = $uid;
 		$translated['module'] = strtolower(get_called_class());
 		$translated['parent_id'] = $parent_id;
 

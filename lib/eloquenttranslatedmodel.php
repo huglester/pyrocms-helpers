@@ -31,21 +31,14 @@ class EloquentTranslatedModel extends Eloquent {
 	
 	public static function create(array $attributes)
 	{
-		if ($uid = array_get($attributes, 'uid'))
+		if ( ! array_get($attributes, 'module'))
 		{
-
+			throw new Exception("Module name should be passed!");
 		}
-		else
+		
+		if ( ! array_get($attributes, 'parent_id'))
 		{
-			if ( ! array_get($attributes, 'module'))
-			{
-				throw new Exception("Module name should be passed!");
-			}
-			
-			if ( ! array_get($attributes, 'parent_id'))
-			{
-				throw new Exception("parent_id should be passed!");
-			}
+			throw new Exception("parent_id should be passed!");
 		}
 
 		$langs = ci()->translate->languages_admin();
@@ -66,11 +59,7 @@ class EloquentTranslatedModel extends Eloquent {
 					'lang' => $lang_slug,
 				);
 
-				if ($uid)
-				{
-					$input['uid'] = $uid;
-				}
-
+				$input['uid'] = (int) array_get($attributes, 'uid');
 				$input['module'] = $attributes['module'];
 				$input['parent_id'] = $attributes['parent_id'];
 
