@@ -467,7 +467,7 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 	public function toArray()
 	{
 		$results = parent::toArray();
-		// $results['image_dynamic'] = $this->image_dynamic;
+		$results['image_dynamic'] = $this->image_dynamic;
 
 		return $results;
 	}
