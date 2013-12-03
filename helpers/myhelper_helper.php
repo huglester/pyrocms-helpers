@@ -455,6 +455,7 @@ function array_paginate($array = array(), $per_page = 5)
 		if ($i === $per_page)
 		{
 			++$page_nr;
+			$i = 0;
 		}
 	}
 
