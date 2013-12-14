@@ -80,7 +80,7 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 
 		$sizes = array();
 
-		if ($this->image)
+		if ( ! $this->dynamic_skip and $this->image)
 		{	
 			$module_name = ($this->dynamic_override_model_name) ?: str_replace('_m', '', get_called_class());
 
@@ -469,7 +469,7 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 	public function toArray()
 	{
 		$results = parent::toArray();
-		( ! $this->dynamic_skip) and $results['image_dynamic'] = $this->image_dynamic;
+		$results['image_dynamic'] = $this->image_dynamic;
 
 		return $results;
 	}
