@@ -18,6 +18,8 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 	protected $allFields; // used for jquery each... array ('title' => false, 'comment' => true)
 
 	protected $myWhereExists; // needed for findCreate()
+
+	protected $dynamic_skip; // skip generation of dynamic_image array()
 	protected $dynamic_override_model_name;
 	protected $dynamic_override_dir_key;
 
