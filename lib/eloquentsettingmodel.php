@@ -18,7 +18,7 @@ class EloquentSettingModel extends Illuminate\Database\Eloquent\Model {
 
 	public static function item($key = null, $default = null, $force_reget = false)
 	{
-		$class = get_called_class();
+		$class = strtolower(get_called_class());
 
 		if ( ! array_key_exists($class, static::$_instances) or $force_reget)
 		{
