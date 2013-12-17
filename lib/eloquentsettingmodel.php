@@ -14,29 +14,31 @@ class EloquentSettingModel extends Illuminate\Database\Eloquent\Model {
 		'company_upload_path',
 	);
 
+	protected static $_instances = array();
+
 	public static function item($key = null, $default = null, $force_reget = false)
 	{
-		static $settings;
+		$class = get_called_class();
 
-		if ( ! $settings or $force_reget)
+		if ( ! array_key_exists($class, static::$_instances) or $force_reget)
 		{
-			$settings = static::first();
+			static::$_instances[$class] = static::first();
 
-			if ( ! $settings)
+			if ( ! static::$_instances[$class])
 			{
 				throw new Exception("\$settings not found: ".get_class());
 			}
 
-			$settings = $settings->toArray();
+			static::$_instances[$class] = static::$_instances[$class]->toArray();
 		}
 
 		if ((count(func_get_args()) === 0))
 		{
-			return $settings;
+			return static::$_instances[$class];
 		}
-		elseif (isset($settings[$key]))
+		elseif (isset(static::$_instances[$class][$key]))
 		{
-			return ($settings[$key]) ?: $default;
+			return (static::$_instances[$class][$key]) ?: $default;
 		}
 		else
 		{
