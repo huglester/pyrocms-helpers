@@ -433,33 +433,9 @@ function pages_build_tree_select($params)
 	return $html;
 }
 
-function array_paginate($array = array(), $per_page = 5)
+function array_paginate($array = array(), $size = 5)
 {
-	$total = count($array);
-
-	$page_nr = 1;
-
-	$new_array = array();
-
-	$i = 0;
-	foreach ($array as $k => $v)
-	{
-		++$i;
-
-		( ! isset($new_array[$page_nr])) and $new_array[$page_nr] = array();
-
-		// preserve keys
-		$new_array[$page_nr][$k] = $v;
-
-		// increase page number
-		if ($i === $per_page)
-		{
-			++$page_nr;
-			$i = 0;
-		}
-	}
-
-	return $new_array;
+	return array_chunk($array, $per_page);
 }
 
 
