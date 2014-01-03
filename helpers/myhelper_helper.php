@@ -438,7 +438,6 @@ function array_paginate($array = array(), $size = 5)
 	return array_chunk($array, $per_page);
 }
 
-
 function array_paginate_col($array = array(), $per_column = 5)
 {
 	$total = count($array);

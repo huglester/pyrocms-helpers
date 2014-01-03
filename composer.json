@@ -1,29 +1,29 @@
 {
-        "name": "huglester/pyrocms-helpers",
-        "type": "library",
-        "description": "PyroCMS helpers to work with Eloquent and others.",
-        "license": "MIT",
-        "authors": [
-                {
-                        "name": "huglester",
-                        "email": "huglester@gmail.com"
-                }
+    "name": "huglester/pyrocms-helpers",
+    "type": "library",
+    "description": "PyroCMS helpers to work with Eloquent and others.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "huglester",
+            "email": "huglester@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "imagine/imagine": "dev-develop",
+        "symfony/http-foundation": "~2"
+    },
+
+    "autoload": {
+        "psr-0": { "Huglester\\Common": "src/" },
+        "classmap": [
+            "lib"
         ],
-        "require": {
-                "php": ">=5.3.3",
-                "imagine/imagine": "dev-develop",
-                "symfony/http-foundation": "2.3.x@stable"
-        },
+        "files": [
+            "helpers/myhelper_helper.php"
+        ]
+    },
 
-        "autoload": {
-                "psr-0": { "Huglester\\Common": "src/" },
-                "classmap": [
-                        "lib"
-                ],
-                "files": [
-                        "helpers/myhelper_helper.php"
-                ]
-        },
-
-        "minimum-stability": "dev"
+    "minimum-stability": "dev"
 }
