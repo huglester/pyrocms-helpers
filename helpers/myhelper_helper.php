@@ -438,7 +438,7 @@ function array_paginate($array = array(), $size = 5)
 	return array_chunk($array, $per_page);
 }
 
-function array_paginate_col($array = array(), $per_column = 5)
+function array_paginate_col($array = array(), $per_column = 5, $preserve_keys = true)
 {
 	$total = count($array);
 
@@ -455,7 +455,14 @@ function array_paginate_col($array = array(), $per_column = 5)
 
 		( ! isset($new_array[$page_nr])) and $new_array[$page_nr] = array();
 
-		$new_array[$page_nr][] = $value;
+		if ($preserve_keys)
+		{
+			$new_array[$page_nr][$key] = $value;
+		}
+		else
+		{
+			$new_array[$page_nr][] = $value;
+		}
 
 		if ($count === $limit)
 		{
