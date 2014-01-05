@@ -435,7 +435,7 @@ function pages_build_tree_select($params)
 
 function array_paginate($array = array(), $size = 5)
 {
-	return array_chunk($array, $per_page);
+	return array_chunk($array, $size);
 }
 
 function array_paginate_col($array = array(), $per_column = 5, $preserve_keys = true)
