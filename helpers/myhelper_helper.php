@@ -433,9 +433,9 @@ function pages_build_tree_select($params)
 	return $html;
 }
 
-function array_paginate($array = array(), $size = 5)
+function array_paginate($array = array(), $size = 5, $preserve_keys = true)
 {
-	return array_chunk($array, $size);
+	return array_chunk($array, $size, $preserve_keys);
 }
 
 function array_paginate_col($array = array(), $per_column = 5, $preserve_keys = true)
