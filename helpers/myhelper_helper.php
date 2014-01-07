@@ -908,3 +908,80 @@ if ( ! function_exists('recursive_rmdir'))
 		}
 	}
 }
+
+/*
+	Example usage: 
+	$filtered = arr_filter_keys($items, array(
+		'image',
+		'translated',
+		'uri',
+		'image_dynamic',
+		'photobank.image',
+		'photobank.photos',
+		'photobank.thumb_url',
+		'photobank.gallery_url',
+	));
+*/
+if ( ! function_exists('arr_filter_keys'))
+{
+	function arr_filter_keys(array $data, array $keys, $is_multi = true)
+	{
+		$return = array();
+
+		if ( ! $is_multi)
+		{
+			$data = array($data);
+		}
+
+		foreach ($data as $input)
+		{
+			$output = array();
+			foreach ($keys as $key)
+			{
+				if (strpos($key, '.') !== false)
+				{
+					$parts = explode('.', $key);
+					$count = count($parts);
+
+					if ($count >= 1)
+					{
+						if ( ! isset($output[$parts[0]]))
+						{
+							$output[$parts[0]] = array();
+						}
+					}
+
+					if ($count >= 2)
+					{
+						$value = ($count === 2) ? Huglester\Common\Arr::get($input, $key) : array();
+						$output[$parts[0]][$parts[1]] = $value;
+					}
+
+					if ($count >= 3)
+					{
+						$value = ($count === 3) ? Huglester\Common\Arr::get($input, $key) : array();
+						$output[$parts[0]][$parts[1]][$parts[2]] = $value;
+					}
+
+					if ($count >= 4)
+					{
+						throw new Exception("Too deep nesting.", 1);
+					}
+				}
+				else
+				{
+					$output[$key] = Huglester\Common\Arr::get($input, $key);
+				}
+			}
+
+			$return[] = $output;
+		}
+
+		if ( ! $is_multi)
+		{
+			return reset($return);
+		}
+
+		return $return;
+	}
+}
