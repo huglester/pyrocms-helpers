@@ -985,3 +985,32 @@ if ( ! function_exists('arr_filter_keys'))
 		return $return;
 	}
 }
+
+if ( ! function_exists('field_visible'))
+{
+	function field_visible($field, $settings)
+	{
+		$hidden = explode(' ', $settings['hidden']);
+		$translated_hidden = explode(' ', $settings['translated_hidden']);
+
+		if (strpos($field, 'translated_') === 0)
+		{
+			$parts = explode('_', $field);
+
+			if ( ! empty($translated_hidden) and in_array($parts[1], $translated_hidden))
+			{
+				return false;
+			}
+		}
+		else
+		{
+			if ( ! empty($hidden) and in_array($field, $hidden))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+}
