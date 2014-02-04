@@ -35,17 +35,23 @@ class ImagineResizer
 		$this->file = new File($full_path);
 		$this->full_path = $this->file->getRealPath();
 
-		$this->validateImage(); // validating an image
+		if (extension_loaded('imagick'))
+		{
+			$this->imagine = new Imagine\Imagick\Imagine();
+		}
+		else
+		{
+			$this->imagine = new Imagine\Gd\Imagine();
+		}
 
+		$this->validateImage(); // validating an image
 	}
 
 	public function setWatermark($full_path)
 	{
 		$file = new File($full_path);
 
-		$imagine = new Imagine\Gd\Imagine();
-		
-		$this->watermark = $imagine->open($file->getRealPath());
+		$this->watermark = $this->imagine->open($file->getRealPath());
 	}
 
 	public function setWatermarkPos($pos_y, $pos_x)
@@ -174,8 +180,7 @@ class ImagineResizer
 			throw new Exception("\$dest_width or \$dest_height is required.\n");
 		}
 
-		$imagine = new Imagine\Gd\Imagine();
-		$image = $imagine->open($this->file);
+		$image = $this->imagine->open($this->file);
 
 		// original size
 		$srcBox = $image->getSize();
@@ -267,7 +272,6 @@ class ImagineResizer
 			throw new Exception("\$dest_width or \$dest_height is required.\n");
 		}
 
-		$imagine = new Imagine\Gd\Imagine();
 		$box = new Box($dest_width, $dest_height);
 
 		$new_filename = pathinfo($destination, PATHINFO_FILENAME);
@@ -285,7 +289,7 @@ class ImagineResizer
 		}
 
 		$destination = rtrim($destination, '/').'/';
-		$image = $imagine->open($this->file);
+		$image = $this->imagine->open($this->file);
 
 		$srcBox = $image->getSize();
 
@@ -319,7 +323,7 @@ class ImagineResizer
 
 		$image->resize(new Box($valid_width, $valid_height));
 
-		$container = $imagine->create(new Box($dest_width, $dest_height));
+		$container = $this->imagine->create(new Box($dest_width, $dest_height));
 
 		$container->paste($image, new Point($offset_x, $offset_y));
 		$container->save($destination.$filename, array('quality' => $quality));
@@ -336,8 +340,7 @@ class ImagineResizer
 			throw new Exception("\$dest_width or \$dest_height is required.\n");
 		}
 
-		$imagine = new Imagine\Gd\Imagine();
-		$image = $imagine->open($this->file);
+		$image = $this->imagine->open($this->file);
 		
 		// original size
 		$srcBox = $image->getSize();
@@ -400,7 +403,7 @@ class ImagineResizer
 				->save($destination.$filename, array('quality' => $quality));
 		}
 
-		$image_gray = $imagine->open($destination.$filename);
+		$image_gray = $this->imagine->open($destination.$filename);
 		$image_gray->effects()->grayscale();
 
 		if ($vertical)
@@ -416,7 +419,7 @@ class ImagineResizer
 			$offset_y = 0;
 		}
 
-		$container = $imagine->create($box_stripe);
+		$container = $this->imagine->create($box_stripe);
 
 		$container->paste($image, new Point(0, 0)); // original image
 		$container->paste($image_gray, new Point($offset_x, $offset_y)); // grayscale image
