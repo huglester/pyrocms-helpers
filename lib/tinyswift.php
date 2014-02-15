@@ -125,6 +125,14 @@ class TinySwift
 
 		// Send the message
 		// returns count of sent messages
-		return $mailer->send($message);
+		$success = $mailer->send($message, $errors);
+
+		if ( ! $success)
+		{
+			log_message('error', 'TinySwift error: '.json_encode($errors));
+		}
+
+		return $success;
 	}
+
 }
