@@ -5,128 +5,128 @@
  */
 if ( ! function_exists('call_fuel_func_array'))
 {
-        function call_fuel_func_array($callback , array $args)
-        {
-                // deal with "class::method" syntax
-                if (is_string($callback) and strpos($callback, '::') !== false)
-                {
-                        $callback = explode('::', $callback);
-                }
+		function call_fuel_func_array($callback , array $args)
+		{
+				// deal with "class::method" syntax
+				if (is_string($callback) and strpos($callback, '::') !== false)
+				{
+						$callback = explode('::', $callback);
+				}
 
-                // if an array is passed, extract the object and method to call
-                if (is_array($callback) and isset($callback[1]) and is_object($callback[0]))
-                {
-                        list($instance, $method) = $callback;
+				// if an array is passed, extract the object and method to call
+				if (is_array($callback) and isset($callback[1]) and is_object($callback[0]))
+				{
+						list($instance, $method) = $callback;
 
-                        // calling the method directly is faster then call_user_func_array() !
-                        switch (count($args))
-                        {
-                                case 0:
-                                        return $instance->$method();
+						// calling the method directly is faster then call_user_func_array() !
+						switch (count($args))
+						{
+								case 0:
+										return $instance->$method();
 
-                                case 1:
-                                        return $instance->$method($args[0]);
+								case 1:
+										return $instance->$method($args[0]);
 
-                                case 2:
-                                        return $instance->$method($args[0], $args[1]);
+								case 2:
+										return $instance->$method($args[0], $args[1]);
 
-                                case 3:
-                                        return $instance->$method($args[0], $args[1], $args[2]);
+								case 3:
+										return $instance->$method($args[0], $args[1], $args[2]);
 
-                                case 4:
-                                        return $instance->$method($args[0], $args[1], $args[2], $args[3]);
-                        }
-                }
+								case 4:
+										return $instance->$method($args[0], $args[1], $args[2], $args[3]);
+						}
+				}
 
-                elseif (is_array($callback) and isset($callback[1]) and is_string($callback[0]))
-                {
-                        list($class, $method) = $callback;
-                        $class = '\\'.ltrim($class, '\\');
+				elseif (is_array($callback) and isset($callback[1]) and is_string($callback[0]))
+				{
+						list($class, $method) = $callback;
+						$class = '\\'.ltrim($class, '\\');
 
-                        // calling the method directly is faster then call_user_func_array() !
-                        switch (count($args))
-                        {
-                                case 0:
-                                        return $class::$method();
+						// calling the method directly is faster then call_user_func_array() !
+						switch (count($args))
+						{
+								case 0:
+										return $class::$method();
 
-                                case 1:
-                                        return $class::$method($args[0]);
+								case 1:
+										return $class::$method($args[0]);
 
-                                case 2:
-                                        return $class::$method($args[0], $args[1]);
+								case 2:
+										return $class::$method($args[0], $args[1]);
 
-                                case 3:
-                                        return $class::$method($args[0], $args[1], $args[2]);
+								case 3:
+										return $class::$method($args[0], $args[1], $args[2]);
 
-                                case 4:
-                                        return $class::$method($args[0], $args[1], $args[2], $args[3]);
-                        }
-                }
+								case 4:
+										return $class::$method($args[0], $args[1], $args[2], $args[3]);
+						}
+				}
 
-                // if it's a string, it's a native function or a static method call
-                elseif (is_string($callback) or $callback instanceOf \Closure)
-                {
-                        is_string($callback) and $callback = ltrim($callback, '\\');
+				// if it's a string, it's a native function or a static method call
+				elseif (is_string($callback) or $callback instanceOf \Closure)
+				{
+						is_string($callback) and $callback = ltrim($callback, '\\');
 
-                        // calling the method directly is faster then call_user_func_array() !
-                        switch (count($args))
-                        {
-                                case 0:
-                                        return $callback();
+						// calling the method directly is faster then call_user_func_array() !
+						switch (count($args))
+						{
+								case 0:
+										return $callback();
 
-                                case 1:
-                                        return $callback($args[0]);
+								case 1:
+										return $callback($args[0]);
 
-                                case 2:
-                                        return $callback($args[0], $args[1]);
+								case 2:
+										return $callback($args[0], $args[1]);
 
-                                case 3:
-                                        return $callback($args[0], $args[1], $args[2]);
+								case 3:
+										return $callback($args[0], $args[1], $args[2]);
 
-                                case 4:
-                                        return $callback($args[0], $args[1], $args[2], $args[3]);
-                        }
-                }
+								case 4:
+										return $callback($args[0], $args[1], $args[2], $args[3]);
+						}
+				}
 
-                // fallback, handle the old way
-                return call_user_func_array($callback, $args);
-        }
+				// fallback, handle the old way
+				return call_user_func_array($callback, $args);
+		}
 }
 
 if ( ! function_exists('result'))
 {
-        /**
-         * Checks if a return value is a Closure without params, and if
-         * so executes it before returning it.
-         *
-         * @param   mixed  $val
-         * @return  mixed  closure result
-         */
-        function result($val)
-        {
-                if ($val instanceof Closure)
-                {
-                        return $val();
-                }
+		/**
+		 * Checks if a return value is a Closure without params, and if
+		 * so executes it before returning it.
+		 *
+		 * @param   mixed  $val
+		 * @return  mixed  closure result
+		 */
+		function result($val)
+		{
+				if ($val instanceof Closure)
+				{
+						return $val();
+				}
 
-                return $val;
-        }
+				return $val;
+		}
 }
 
 if ( ! function_exists('cleanpath'))
 {
-        /**
-         * Cleans a file path so that it does not contain absolute file paths.
-         *
-         * @param   string  the filepath
-         * @return  string  the clean path
-         */
-        function cleanpath($path)
-        {
-                static $search = array(APPSPATH, VENDORPATH, DOCROOT, '\\');
-                static $replace = array('APPSPATH/', 'VENDORPATH/', 'DOCROOT/', DIRECTORY_SEPARATOR);
-                return str_ireplace($search, $replace, $path);
-        }
+		/**
+		 * Cleans a file path so that it does not contain absolute file paths.
+		 *
+		 * @param   string  the filepath
+		 * @return  string  the clean path
+		 */
+		function cleanpath($path)
+		{
+				static $search = array(APPSPATH, VENDORPATH, DOCROOT, '\\');
+				static $replace = array('APPSPATH/', 'VENDORPATH/', 'DOCROOT/', DIRECTORY_SEPARATOR);
+				return str_ireplace($search, $replace, $path);
+		}
 }
 
 if ( ! function_exists('my_send_email') )
@@ -740,7 +740,7 @@ function tdropdown($array, $field = 'title', $lang = null)
 
 	foreach ($array as $v)
 	{
-		$new_array[$v['id']] = $v['translated'][$lang][$field];
+		$new_array[$v['id']] = translated($v['translated'], $field, $lang);
 	}
 
 	return $new_array;
@@ -752,16 +752,53 @@ function tdropdown($array, $field = 'title', $lang = null)
 */
 function selected_pivot($input, $value)
 {
-	if ($input instanceOf Illuminate\Database\Eloquent\Collection)
+	return pivot_exists($inputm, $value);
+}
+
+/*
+Example:
+form_checkbox('lessons[]', $key, pivot_exists($item->drivings, $key), 'id="drivings_selected_'.$key.'"');
+*/
+function pivot_exists($collection, $key)
+{
+	if ($collection instanceOf Illuminate\Database\Eloquent\Collection)
 	{
-		$input = $input->toArray();
+		$collection = $collection->toArray();
 	}
 
-	foreach ($input as $i)
+	if ( ! empty($collection))
 	{
-		if ($value == $i['id'])
+		foreach ($collection as $value)
 		{
-			return true;
+			if ($value['id'] == $key)
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+/*
+	Example:
+	pivot_selected($item->languages->toArray(), 3, 'speak_id')
+*/
+function pivot_selected($collection, $key, $field)
+{
+	if ($collection instanceOf Illuminate\Database\Eloquent\Collection)
+	{
+		$collection = $collection->toArray();
+	}
+
+	if ( ! empty($collection))
+	{
+		foreach ($collection as $item)
+		{
+			if ($item['id'] == $key)
+			{
+				return array_get($item['pivot'], $field, false);
+			}
 		}
 	}
 
