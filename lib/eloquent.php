@@ -10,6 +10,7 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 	// protected static $_instances = array();
 	protected static $order = null;
 	protected static $lang = null;
+	protected static $rules = array();
 
 	protected $validateVars = array(); // items to validate
 	protected $messages;
@@ -22,13 +23,13 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 	protected $dynamic_skip; // skip generation of dynamic_image array()
 	protected $dynamic_override_model_name;
 	protected $dynamic_override_dir_key;
-
+	
 	protected static $dispatcher;
 
 	protected static function boot()
 	{
 		parent::boot();
-		static::$dispatcher = new Illuminate\Events\Dispatcher;
+		( ! static::$dispatcher) and static::$dispatcher = new Illuminate\Events\Dispatcher;
 	}
 
 	public function scopeActive($query)
@@ -338,7 +339,6 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		foreach ($attributes as $key => $value)
 		{
 			// $key = $this->removeTableFromKey($key);
-
 			if ($this->isFillable($key))
 			{
 				$this->validateVars[$key] = $attributes[$key];
@@ -360,6 +360,7 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		$input = $this->getValidateVars();
 
 		// handle both $_POST and custom arrays
+		ci()->form_validation->reset();
 		ci()->form_validation->set_data($input);
 
 		// set up the rules
@@ -369,6 +370,10 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		// validate
 		if (ci()->form_validation->run())
 		{
+			// reset the messages
+			$this->messages = null;
+			$this->errorFields = array();
+
 			$return = true;
 		}
 		else
