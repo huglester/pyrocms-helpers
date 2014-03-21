@@ -35,7 +35,7 @@ class ImagineResizer
 		$this->file = new File($full_path);
 		$this->full_path = $this->file->getRealPath();
 
-		if (extension_loaded('imagick'))
+		if (class_exists('Imagick') and extension_loaded('imagick'))
 		{
 			$this->imagine = new Imagine\Imagick\Imagine();
 		}
