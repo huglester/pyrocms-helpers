@@ -1,6 +1,6 @@
 <?php
 
-// http://giorgiocefaro.com/blog/using-php-imagine-to-best-fit-crop-images
+// initial example from: http://giorgiocefaro.com/blog/using-php-imagine-to-best-fit-crop-images
 
 use Symfony\Component\HttpFoundation\File\File;
 use Imagine\Image\ImagineInterface;
@@ -12,6 +12,12 @@ use Imagine\Image\Box;
 	Example usage:
 	$imagine = new ImagineResizer($full_path);
 	$imagine->cropResize($destination_dir, $width, $height);
+	
+	// set the quality
+	$imagine->cropResize($destination_dir, $width, $height, $quality);
+
+	// grayscale image?
+	$imagine->cropResize($destination_dir, $width, $height, $quality, true);
 
 	$imagine = new ImagineResizer($full_path);
 	$imagine->setWatermark(FCPATH.'userdata/watermark.png');
@@ -173,7 +179,7 @@ class ImagineResizer
 		return new Point($position_final_x, $position_final_y);
 	}
 
-	public function cropResize($destination, $dest_width = null, $dest_height = null, $quality = 90)
+	public function cropResize($destination, $dest_width = null, $dest_height = null, $quality = 90, $grayscale = false)
 	{
 		if ( ! $dest_width and ! $dest_height)
 		{
@@ -188,7 +194,6 @@ class ImagineResizer
 		( ! $dest_width and $dest_height) and $dest_width = $this->autoWidth($dest_height);
 		( ! $dest_height and $dest_width) and $dest_height = $this->autoHeight($dest_width);
 
-		
 		$box = new Box($dest_width, $dest_height);
 
 		$new_filename = pathinfo($destination, PATHINFO_FILENAME);
@@ -207,9 +212,15 @@ class ImagineResizer
 
 		$destination = rtrim($destination, '/').'/';
 
+		// do we need to apply grayscale filter?
+		if ($grayscale)
+		{
+			$image->effects()->grayscale();
+		}
+
 		if ($srcBox->getWidth() < $dest_width and $srcBox->getHeight() < $dest_height)
 		{
-			$dest = FCPATH.$destination.$this->file->getFileName();
+			$dest = FCPATH.$destination.$filename;
 
 			// only if paths are different
 			// or if we have a watermark, and want to overwrite original photo...
