@@ -298,7 +298,7 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 				}
 			}
 		}
-		
+
 		return parent::update($attributes);
 	}
 
@@ -341,7 +341,26 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 			// $key = $this->removeTableFromKey($key);
 			if ($this->isFillable($key))
 			{
-				$this->validateVars[$key] = $attributes[$key];
+				if (ends_with($key, '_at') and strpos($value, '-'))
+				{
+					switch ($key) {
+						case 'expires_at':
+							$this->validateVars[$key] = strtotime($attributes[$key].' 23:59:59');
+							break;
+
+						case 'starts_at':
+							$this->validateVars[$key] = strtotime($attributes[$key].' 00:00:00');
+							break;
+
+						default:
+							$this->validateVars[$key] = strtotime($attributes[$key].' 00:00:00');
+							break;
+					}
+				}
+				else
+				{
+					$this->validateVars[$key] = $attributes[$key];
+				}
 			}
 		}
 
@@ -360,7 +379,7 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		$input = $this->getValidateVars();
 
 		// handle both $_POST and custom arrays
-		ci()->form_validation->reset();
+		ci()->form_validation->reset_validation();
 		ci()->form_validation->set_data($input);
 
 		// set up the rules
