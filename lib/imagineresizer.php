@@ -443,7 +443,12 @@ class ImagineResizer
 
 	protected function validateImage()
 	{
-		$mime = $this->file->getMimeType();
+		// check if fileinfo is loaded
+		$mime = null;
+		if (class_exists('finfo'))
+		{
+			$mime = $this->file->getMimeType();
+		}
 
 		if ($mime and strpos($mime, 'image/') === 0)
 		{
