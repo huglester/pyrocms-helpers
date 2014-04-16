@@ -1,8 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-// how to replace this with more elegant solution?
-require_once('connection.php');
-
 /*
 	CREATE TABLE `default_translated_t` (
 		`uid` INT( 11 ) NOT NULL DEFAULT '0',

@@ -13,7 +13,7 @@
         "php": ">=5.3.3",
         "imagine/imagine": "dev-develop",
         "symfony/http-foundation": "~2",
-        "patchwork/utf8": "1.x@stable"
+        "patchwork/utf8": "1.*@stable"
     },
 
     "autoload": {
