@@ -238,7 +238,7 @@ class ImagineResizer
 				$image
 					->save($destination.$filename, array('quality' => $quality));
 
-				@chmod($dest, 0666);
+				@chmod($destination.$filename, 0666);
 			}
 
 			return $this->file->getFileName();
