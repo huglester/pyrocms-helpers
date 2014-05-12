@@ -492,7 +492,7 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		$results = parent::toArray();
 
 		// only fire, if the actual model has image property
-		if (isset($this->attributes['image']))
+		if (isset($this->attributes['image']) and class_exists('photobanks_m'))
 		{
 			$results['image_dynamic'] = $this->image_dynamic;
 		}
