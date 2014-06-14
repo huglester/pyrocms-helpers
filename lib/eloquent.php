@@ -377,10 +377,17 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 
 		// handle both $_POST and custom arrays
 		ci()->form_validation->reset_validation();
+
+		// if we are not passing and array, take existing object
+		if ( ! $input and $this->id)
+		{
+			$input = $this->toArray();
+		}
+
 		ci()->form_validation->set_data($input);
 
 		// set up the rules
-		ci()->form_validation->set_rules(static::$rules);
+		ci()->form_validation->set_rules($this->getRules());
 
 		$return = false;
 		// validate
@@ -498,6 +505,59 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		}
 
 		return $results;
+	}
+
+	public function save(array $options = array())
+	{
+		// no rules applied
+		if ( ! isset(static::$rules) or count(static::$rules) === 0)
+		{
+			return parent::save($options);
+		}
+		// call validation
+		if ($this->validate())
+		{
+			return parent::save($options);
+		}
+
+		return false;
+	}
+
+	public function getRules()
+	{
+		if ( ! isset(static::$rules) or count(static::$rules) === 0)
+		{
+			return false;
+		}
+
+		$parsed = array();
+		foreach (static::$rules as $rule)
+		{
+			if (strpos($rule['label'], 'lang:myglobal:') === 0)
+			{
+				$key = str_replace('lang:myglobal:', '', $rule['label']);
+				$rule['label'] = ci()->translate->{$key};
+			}
+
+			$parsed[] = $rule;
+		}
+
+		return $parsed;
+	}
+
+	public function hasErrors($field = null)
+	{
+		if (empty($this->errorFields))
+		{
+			return false;
+		}
+
+		if ( ! $field)
+		{
+			return count($this->errorFields) ? true : false;
+		}
+		
+		return (array_search($field, $this->errorFields) !== false) ? true : false;
 	}
 
 }
