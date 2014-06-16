@@ -299,19 +299,6 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		return parent::update($attributes);
 	}
 
-	// auto fix, for: 'my intro' > '<p>my intro</p>'
-	public function setIntroAttribute($value)
-	{
-		$tag = 'p';
-
-		if ($value and strip_tags($value) and strpos($value, '<'.$tag) !== 0)
-		{
-			$value = '<'.$tag.'>'.$value.'</'.$tag.'>';
-		}
-
-		$this->attributes['intro'] = $value;
-	}
-
 	public function prep_value($value, $tag = 'p')
 	{
 		if ($value and strip_tags($value) and strpos($value, '<p') !== 0 and mb_strlen(strip_tags($value)) === mb_strlen($value))
