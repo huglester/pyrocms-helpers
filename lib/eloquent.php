@@ -11,6 +11,7 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 
 	protected $validateVars = array(); // items to validate
 	protected $messages;
+	protected $messages_array = array();
 	protected $validatedFields; // array ('comment');
 	protected $errorFields; // array ('title');
 	protected $allFields; // used for jquery each... array ('title' => false, 'comment' => true)
@@ -67,8 +68,8 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 	 * avatar_width, avatar_height
 	 * result will be
 	   array(3) {
-	       'http://example.com/photobanks/modules/317x317x85/uploads/default/katalogas/f90a0607f6c6660eaedd91314fc2609a.jpg',
-	       'http://example.com/photobanks/modules/180x180x85/uploads/default/katalogas/f90a0607f6c6660eaedd91314fc2609a.jpg',
+		   'http://example.com/photobanks/modules/317x317x85/uploads/default/katalogas/f90a0607f6c6660eaedd91314fc2609a.jpg',
+		   'http://example.com/photobanks/modules/180x180x85/uploads/default/katalogas/f90a0607f6c6660eaedd91314fc2609a.jpg',
 	   }
 	*/
 	public function getImageDynamicAttribute()
@@ -245,6 +246,29 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 						break;
 				}
 			}
+			elseif (ends_with($key, '_at'))
+			{
+				$timestamp = $attributes[$key];
+				if (
+					(int) $timestamp === $timestamp 
+					and ($timestamp <= PHP_INT_MAX)
+					and ($timestamp >= ~PHP_INT_MAX)
+				)
+				{
+					// already a timestamp
+					$attributes[$key] = $timestamp;
+				}
+				else
+				{
+					$format = ci()->settings->date_format;
+					$validated = \DateTime::createFromFormat($format, $timestamp);
+
+					if ($validated)
+					{
+						$attributes[$key] = $validated->getTimestamp();
+					}
+				}
+			}
 		}
 
 		return parent::create($attributes);
@@ -294,6 +318,29 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 						break;
 				}
 			}
+			elseif (ends_with($key, '_at'))
+			{
+				$timestamp = $attributes[$key];
+				if (
+					(int) $timestamp === $timestamp 
+					and ($timestamp <= PHP_INT_MAX)
+					and ($timestamp >= ~PHP_INT_MAX)
+				)
+				{
+					// already a timestamp
+					$attributes[$key] = $timestamp;
+				}
+				else
+				{
+					$format = ci()->settings->date_format;
+					$validated = \DateTime::createFromFormat($format, $timestamp);
+
+					if ($validated)
+					{
+						$attributes[$key] = $validated->getTimestamp();
+					}
+				}
+			}
 		}
 
 		return parent::update($attributes);
@@ -341,6 +388,29 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 							break;
 					}
 				}
+				elseif (ends_with($key, '_at'))
+				{
+					$timestamp = $attributes[$key];
+					if (
+						(int) $timestamp === $timestamp 
+						and ($timestamp <= PHP_INT_MAX)
+						and ($timestamp >= ~PHP_INT_MAX)
+					)
+					{
+						// already a timestamp
+						$this->validateVars[$key] = $timestamp;
+					}
+					else
+					{
+						$format = ci()->settings->date_format;
+						$validated = \DateTime::createFromFormat($format, $timestamp);
+						
+						if ($validated)
+						{
+							$this->validateVars[$key] = $validated->getTimestamp();
+						}
+					}
+				}
 				else
 				{
 					$this->validateVars[$key] = $attributes[$key];
@@ -381,7 +451,7 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		if (ci()->form_validation->run())
 		{
 			// reset the messages
-			$this->messages = null;
+			$this->messages = array();
 			$this->errorFields = array();
 
 			$return = true;
@@ -389,6 +459,7 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		else
 		{
 			$this->messages = validation_errors();
+			$this->messages_array = ci()->form_validation->error_array();
 		}
 
 		foreach (static::$rules as $rule)
@@ -459,6 +530,11 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 	public function getMessages()
 	{
 		return $this->messages;
+	}
+
+	public function getMessage($key)
+	{
+		return isset($this->messages_array[$key]) ? $this->messages_array[$key] : null;
 	}
 
 	public function getValidateVars()
