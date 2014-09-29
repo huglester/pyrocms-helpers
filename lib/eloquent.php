@@ -22,6 +22,8 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 	protected $dynamic_override_model_name;
 	protected $dynamic_override_dir_key;
 	
+	protected $skipValidation;
+
 	protected static $dispatcher;
 
 	protected static function boot()
@@ -557,6 +559,13 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		return $this->allFields;
 	}
 
+	public function setSkipValidation($bool)
+	{
+		$this->skip_validation = (bool) $bool;
+
+		return $this;
+	}
+
 	public function toArray()
 	{
 		$results = parent::toArray();
@@ -573,8 +582,13 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 	public function save(array $options = array())
 	{
 		// no rules applied
-		if ( ! isset(static::$rules) or count(static::$rules) === 0)
+		if ( ! isset(static::$rules) or count(static::$rules) === 0 or $this->skip_validation)
 		{
+			if (isset($this->attributes['skip_validation']))
+			{
+				unset($this->attributes['skip_validation']);
+			}
+
 			return parent::save($options);
 		}
 		// call validation
