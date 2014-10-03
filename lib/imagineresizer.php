@@ -41,7 +41,11 @@ class ImagineResizer
 		$this->file = new File($full_path);
 		$this->full_path = $this->file->getRealPath();
 
-		if (class_exists('Imagick') and extension_loaded('imagick'))
+		if (defined('WEBAS_IMAGINE_RESIZER_GD') and WEBAS_IMAGINE_RESIZER_GD)
+		{
+			$this->imagine = new Imagine\Gd\Imagine();
+		}
+		elseif (class_exists('Imagick') and extension_loaded('imagick'))
 		{
 			$this->imagine = new Imagine\Imagick\Imagine();
 		}
