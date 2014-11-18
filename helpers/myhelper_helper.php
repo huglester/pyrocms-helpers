@@ -433,9 +433,38 @@ function pages_build_tree_select($params)
 	return $html;
 }
 
-function array_paginate($array = array(), $size = 5, $preserve_keys = true)
+function array_paginate2($items, $size = 2, $preserve_keys = true)
 {
-	return array_chunk($array, $size, $preserve_keys);
+	$total = count($items);
+
+	$new_array = array();
+	
+	$page_nr = 1;
+	$count = 0;
+	foreach ($items as $key => $item)
+	{
+		++$count;
+
+		( ! isset($new_array[$page_nr])) and $new_array[$page_nr] = array();
+
+		if ($preserve_keys)
+		{
+			$new_array[$page_nr][$key] = $item;
+		}
+		else
+		{
+			$new_array[$page_nr][] = $item;
+		}
+
+		// reset
+		if ($count === $size)
+		{
+			$count = 0;
+			++$page_nr;
+		}
+	}
+
+	return $new_array;
 }
 
 function array_paginate_col($array = array(), $per_column = 5, $preserve_keys = true)
