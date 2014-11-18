@@ -433,7 +433,7 @@ function pages_build_tree_select($params)
 	return $html;
 }
 
-function array_paginate2($items, $size = 2, $preserve_keys = true)
+function array_paginate($items, $size = 2, $preserve_keys = true)
 {
 	$total = count($items);
 
