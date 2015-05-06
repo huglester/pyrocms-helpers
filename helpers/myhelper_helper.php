@@ -1057,7 +1057,12 @@ if ( ! function_exists('field_visible'))
 	function field_visible($field, $settings)
 	{
 		$hidden = explode(' ', $settings['hidden']);
-		$translated_hidden = explode(' ', $settings['translated_hidden']);
+
+		if (isset($settings['translated_hidden'])){
+			$translated_hidden = explode(' ', $settings['translated_hidden']);
+		} elseif (isset($settings['thidden'])) {
+			$translated_hidden = explode(' ', $settings['thidden']);
+		}
 
 		if (strpos($field, 'translated_') === 0)
 		{
