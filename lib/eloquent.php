@@ -190,7 +190,7 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 		return $exists;
 	}
 
-	public static function create(array $attributes)
+	public static function create(array $attributes = [])
 	{
 		$instance = new static;
 		$fillable = isset($instance->fillable) ? $instance->fillable : array();
