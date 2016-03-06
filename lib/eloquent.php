@@ -279,10 +279,11 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 	/**
 	 * Update the model in the database.
 	 *
-	 * @param  array  $attributes
+	 * @param  array $attributes
+	 * @param array $options
 	 * @return mixed
 	 */
-	public function update(array $attributes = array())
+	public function update(array $attributes = [], array $options = [])
 	{
 		$instance = new static;
 		$fillable = isset($instance->fillable) ? $instance->fillable : array();
