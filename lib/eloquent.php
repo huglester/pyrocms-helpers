@@ -24,13 +24,13 @@ class Eloquent extends Illuminate\Database\Eloquent\Model {
 	
 	protected $skipValidation;
 
-	protected static $dispatcher;
+	// protected static $dispatcher;
 
-	protected static function boot()
-	{
-		parent::boot();
-		( ! static::$dispatcher) and static::$dispatcher = new Illuminate\Events\Dispatcher;
-	}
+	// protected static function boot()
+	// {
+	// 	parent::boot();
+	// 	( ! static::$dispatcher) and static::$dispatcher = new Illuminate\Events\Dispatcher;
+	// }
 
 	public function scopeActive($query)
 	{
