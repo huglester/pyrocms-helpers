@@ -26,7 +26,7 @@ class EloquentTranslatedModel extends Eloquent {
 		'lang',
 	);
 	
-	public static function create(array $attributes = [])
+	public static function create(array $attributes)
 	{
 		if ( ! array_get($attributes, 'module'))
 		{

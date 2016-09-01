@@ -2,7 +2,7 @@
 
 class EloquentTranslated extends Eloquent {
 
-	public static function create(array $attributes = [])
+	public static function create(array $attributes)
 	{
 		$success = false;
 
@@ -25,7 +25,7 @@ class EloquentTranslated extends Eloquent {
 		return ($success) ? $results : false;
 	}
 
-	public function update(array $attributes = array(), array $options = [])
+	public function update(array $attributes = array())
 	{
 		$success = false;
 		$parent_id = $this->getAttribute('id');
